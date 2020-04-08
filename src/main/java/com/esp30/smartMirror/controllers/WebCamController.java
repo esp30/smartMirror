@@ -35,14 +35,20 @@ public class WebCamController {
         webcam.open();
         byte[] imageBytes = WebcamUtils.getImageBytes(webcam, "png");
         CascadeClassifier faceDetector = new CascadeClassifier();
+        CascadeClassifier smileDetector = new CascadeClassifier();
 
-        File cascade = resourceLoader.getResource("classpath:static/haarcascade_frontalface_alt.xml").getFile();
-        faceDetector.load(cascade.getAbsolutePath());
+        File faceCascade = resourceLoader.getResource("classpath:static/haarcascade_frontalface_alt.xml").getFile();
+        faceDetector.load(faceCascade.getAbsolutePath());
+
+        File smileCascade = resourceLoader.getResource("classpath:static/haarcascade_smile.xml").getFile();
+        smileDetector.load(smileCascade.getAbsolutePath());
 
         Mat cvImage = Imgcodecs.imdecode(new MatOfByte(imageBytes), Imgcodecs.CV_LOAD_IMAGE_UNCHANGED);
 
         MatOfRect faceDetections = new MatOfRect();
+        MatOfRect smileDetections = new MatOfRect();
         faceDetector.detectMultiScale(cvImage, faceDetections);
+        smileDetector.detectMultiScale(cvImage, smileDetections, 1.8, 20, 0, new Size(0,0), new Size(1000, 1000));
 
         for(Rect rect : faceDetections.toArray()){
             Imgproc.rectangle(cvImage, new Point(rect.x, rect.y), new Point(rect.x + rect.width, rect.y + rect.height), new Scalar(0,255,0));
@@ -57,6 +63,11 @@ public class WebCamController {
         model.addAttribute("camFeedback", image);
 
         webcam.close();
+
+        if(!smileDetections.empty()){
+            model.addAttribute("emotion", "\uD83D\uDE0A");
+        }
+        else model.addAttribute("emotion", "");
         return "mirror";
     }
 
