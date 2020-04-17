@@ -19,16 +19,35 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 import java.io.*;
 import java.util.Base64;
+import java.util.Properties;
+import javax.annotation.PostConstruct;
+import org.apache.kafka.clients.producer.KafkaProducer;
+import org.apache.kafka.clients.producer.ProducerRecord;
 
 @Controller
 public class WebCamController {
     private Logger logger = LoggerFactory.getLogger(WebCamController.class);
-
+    
+    private final Properties properties = new Properties();
+    private KafkaProducer kafkaProducer;
+    
+    @PostConstruct
+    public void init(){
+        logger.info("Initializing webcam controller");
+        properties.put("bootstrap.servers", "localhost:9092");
+        properties.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
+        properties.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer");
+    }
+    
     @Autowired
     ResourceLoader resourceLoader;
 
     @GetMapping("/mirror")
     public String exposeCamera(Model model) throws IOException{
+        
+        kafkaProducer = new KafkaProducer(properties);
+      
+        
         Webcam webcam = Webcam.getDefault();
         webcam.setViewSize(WebcamResolution.VGA.getSize());
 
@@ -53,7 +72,7 @@ public class WebCamController {
         for(Rect rect : faceDetections.toArray()){
             Imgproc.rectangle(cvImage, new Point(rect.x, rect.y), new Point(rect.x + rect.width, rect.y + rect.height), new Scalar(0,255,0));
         }
-
+  
         MatOfByte mb = new MatOfByte();
         Imgcodecs.imencode(".png", cvImage, mb);
         byte[] cvImageBytes = mb.toArray();
@@ -61,13 +80,29 @@ public class WebCamController {
         Base64.Encoder encoder = Base64.getEncoder();
         String image = "data:image/png;base64," + encoder.encodeToString(cvImageBytes);
         model.addAttribute("camFeedback", image);
-
+        
         webcam.close();
-
+        
+        // Producing a kafka simple string msg. Should consist on the encoded img
+        // string above and if it's the case, a note stating that the user is smilling
+        
         if(!smileDetections.empty()){
+        
+            try{
+                logger.info("Producing kafka string message!");
+                kafkaProducer.send(new ProducerRecord("happy-people", Integer.toString(0), image));
+            }catch (Exception e){
+                e.printStackTrace();
+            }finally {
+                kafkaProducer.close();
+            }
+            
             model.addAttribute("emotion", "\uD83D\uDE0A");
         }
         else model.addAttribute("emotion", "");
+        
+   
+        
         return "mirror";
     }
 
