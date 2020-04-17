@@ -21,23 +21,23 @@ import java.io.*;
 import java.util.Base64;
 import java.util.Properties;
 import javax.annotation.PostConstruct;
-import org.apache.kafka.clients.producer.KafkaProducer;
-import org.apache.kafka.clients.producer.ProducerRecord;
+//import org.apache.kafka.clients.producer.KafkaProducer;
+//import org.apache.kafka.clients.producer.ProducerRecord;
 
 @Controller
 public class WebCamController {
     private Logger logger = LoggerFactory.getLogger(WebCamController.class);
     
-    private final Properties properties = new Properties();
-    private KafkaProducer kafkaProducer;
+    //private final Properties properties = new Properties();
+    //private KafkaProducer kafkaProducer;
     
-    @PostConstruct
+/*    @PostConstruct
     public void init(){
         logger.info("Initializing webcam controller");
-        properties.put("bootstrap.servers", "localhost:9092");
+        properties.put("bootstrap.servers", "192.168.160.103:9021");
         properties.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
         properties.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer");
-    }
+    }*/
     
     @Autowired
     ResourceLoader resourceLoader;
@@ -45,7 +45,7 @@ public class WebCamController {
     @GetMapping("/mirror")
     public String exposeCamera(Model model) throws IOException{
         
-        kafkaProducer = new KafkaProducer(properties);
+        //kafkaProducer = new KafkaProducer(properties);
       
         
         Webcam webcam = Webcam.getDefault();
@@ -88,14 +88,14 @@ public class WebCamController {
         
         if(!smileDetections.empty()){
         
-            try{
+/*            try{
                 logger.info("Producing kafka string message!");
                 kafkaProducer.send(new ProducerRecord("happy-people", Integer.toString(0), image));
             }catch (Exception e){
                 e.printStackTrace();
             }finally {
                 kafkaProducer.close();
-            }
+            }*/
             
             model.addAttribute("emotion", "\uD83D\uDE0A");
         }
