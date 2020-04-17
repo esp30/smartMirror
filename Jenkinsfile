@@ -5,7 +5,7 @@ pipeline{
         stage('Build'){
             steps{
                 sshagent(credentials: ['esp30-ssh-deploy']){
-                    ssh -o 'StrictHostKeyChecking=no' -l esp30 192.168.160.103 uname -a
+                    sh "ssh -o 'StrictHostKeyChecking=no' -l esp30 192.168.160.103 uname -a"
                 }
                 sh 'docker build -t esp30-smartmirror .'
             }
