@@ -4,6 +4,9 @@ pipeline{
     stages {
         stage('Build'){
             steps{
+                sshagent(credentials: ['esp30-ssh-deploy']){
+                    sh 'cat something'
+                }
                 sh 'docker build -t esp30-smartmirror .'
             }
         }
