@@ -5,7 +5,7 @@ pipeline{
         stage('Build'){
             steps{
                 sh 'mvn clean package'
-                sh 'docker build -t esp30-smartMirror .'
+                sh 'docker build -t esp30-smartmirror .'
             }
         }
         stage('Test'){
