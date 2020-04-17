@@ -1,6 +1,7 @@
+String cron_job = BRANCH_NAME == "master" ? "@hourly" : ""
 pipeline{
     agent any
-
+    triggers { cron(cron_job) }
     stages {
         stage('Test'){
             steps{
