@@ -19,7 +19,7 @@ pipeline{
             steps{
                 sshagent(credentials: ['esp30-ssh-deploy']){
                     sh 'mvn clean package -DskipTests'
-                    sh "scp /var/jenkins_home/workspace/es-2019-2020-P30/target/smartMirror-0.0.1.1.war esp30@192.168.160.103:/target"
+                    sh "scp /var/jenkins_home/workspace/es-2019-2020-P30/target/smartMirror-0.0.1.1.war esp30@192.168.160.103:/home/esp30/target"
                 }
             }
         }
