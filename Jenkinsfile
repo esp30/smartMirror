@@ -21,6 +21,7 @@ pipeline{
                     sh 'mvn clean package -DskipTests'
                     sh "scp /var/jenkins_home/workspace/es-2019-2020-P30-mb_master/target/smartMirror-0.0.1.1.jar esp30@192.168.160.103:/home/esp30/target"
                     sh "scp /var/jenkins_home/workspace/es-2019-2020-P30-mb_master/Dockerfile esp30@192.168.160.103:/home/esp30"
+                    sh "ssh -o 'StrictHostKeyChecking=no' -l esp30 192.168.160.103 [ "$(docker ps -q -f name=esp30-smartmirror)" ] && docker stop esp30-smartmirror && docker rm esp30-smartmirror"
                     sh "ssh -o 'StrictHostKeyChecking=no' -l esp30 192.168.160.103 docker build -t esp30-smartmirror ."
                     sh "ssh -o 'StrictHostKeyChecking=no' -l esp30 192.168.160.103 docker run -d -p 30010:8080 --name esp30-smartmirror esp30-smartmirror"
                 }
