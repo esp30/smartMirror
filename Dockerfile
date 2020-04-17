@@ -2,6 +2,6 @@
 #COPY target/smartMirror-0.0.1.1.jar $DEPLOY_DIR
 
 FROM openjdk:8-jre-alpine
-COPY target/smartMirror-0.0.1.1.jar /usr/src/myapp
-WORKDIR /usr/src/myapp
-ENTRYPOINT ["java", "-jar", "smartMirror-0.0.1.1.jar"]
+WORKDIR /usr/local/runme
+COPY target/smartMirror-0.0.1.1.jar smartMirror.jar
+ENTRYPOINT ["java", "-jar", "smartMirror.jar"]
