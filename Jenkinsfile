@@ -14,6 +14,9 @@ pipeline{
         }
         stage('Deploy'){
             steps{
+                sh 'docker stop esp30-smartmirror'
+                sh 'docker rm esp30-smartmirror'
+                sh 'docker run -d -p 30010:8080 -p 30020:4848 --name esp30-smartmirror esp30-smartmirror '
                 sh 'mvn deploy -s settings.xml'
             }
         }
