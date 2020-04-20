@@ -56,11 +56,11 @@ public class WebCamController {
         CascadeClassifier faceDetector = new CascadeClassifier();
         CascadeClassifier smileDetector = new CascadeClassifier();
 
-        File faceCascade = resourceLoader.getResource("classpath:static/haarcascade_frontalface_alt.xml").getFile();
-        faceDetector.load(faceCascade.getAbsolutePath());
+        //File faceCascade = resourceLoader.getResource("classpath:static/haarcascade_frontalface_alt.xml").getFile();
+        //faceDetector.load(faceCascade.getAbsolutePath());
 
-        File smileCascade = resourceLoader.getResource("classpath:static/haarcascade_smile.xml").getFile();
-        smileDetector.load(smileCascade.getAbsolutePath());
+        //File smileCascade = resourceLoader.getResource("classpath:static/haarcascade_smile.xml").getFile();
+        //smileDetector.load(smileCascade.getAbsolutePath());
 
         //Mat cvImage = Imgcodecs.imdecode(new MatOfByte(imageBytes), Imgcodecs.CV_LOAD_IMAGE_UNCHANGED);
 
