@@ -1,0 +1,4 @@
+if [ "$(docker ps -q -f name=esp30-smartmirror)" ]; then
+        docker stop esp30-smartmirror
+        docker rm esp30-smartmirror
+fi
