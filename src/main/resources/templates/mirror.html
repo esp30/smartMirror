@@ -9,6 +9,19 @@
     <h1>Very Smart Mirror</h1>
     <img th:src="${camFeedback}">
     <h1 th:text="${emotion}"></h1>
+
+    <video id="video" width="640" height="480" autoplay></video>
 </div>
+
+<script>
+    var video = document.getElementById('video');
+
+    if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia){
+        navigator.mediaDevices.getUserMedia({video: true}).then(function (stream) {
+            video.srcObject = stream;
+            video.play();
+        });
+    }
+</script>
 </body>
 </html>

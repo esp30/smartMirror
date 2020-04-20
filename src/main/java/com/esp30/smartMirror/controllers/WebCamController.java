@@ -48,11 +48,11 @@ public class WebCamController {
         //kafkaProducer = new KafkaProducer(properties);
       
         
-        Webcam webcam = Webcam.getDefault();
-        webcam.setViewSize(WebcamResolution.VGA.getSize());
+        //Webcam webcam = Webcam.getDefault();
+        //webcam.setViewSize(WebcamResolution.VGA.getSize());
 
-        webcam.open();
-        byte[] imageBytes = WebcamUtils.getImageBytes(webcam, "png");
+        //webcam.open();
+        //byte[] imageBytes = WebcamUtils.getImageBytes(webcam, "png");
         CascadeClassifier faceDetector = new CascadeClassifier();
         CascadeClassifier smileDetector = new CascadeClassifier();
 
@@ -62,26 +62,26 @@ public class WebCamController {
         File smileCascade = resourceLoader.getResource("classpath:static/haarcascade_smile.xml").getFile();
         smileDetector.load(smileCascade.getAbsolutePath());
 
-        Mat cvImage = Imgcodecs.imdecode(new MatOfByte(imageBytes), Imgcodecs.CV_LOAD_IMAGE_UNCHANGED);
+        //Mat cvImage = Imgcodecs.imdecode(new MatOfByte(imageBytes), Imgcodecs.CV_LOAD_IMAGE_UNCHANGED);
 
         MatOfRect faceDetections = new MatOfRect();
         MatOfRect smileDetections = new MatOfRect();
-        faceDetector.detectMultiScale(cvImage, faceDetections);
-        smileDetector.detectMultiScale(cvImage, smileDetections, 1.8, 20, 0, new Size(0,0), new Size(1000, 1000));
+        //faceDetector.detectMultiScale(cvImage, faceDetections);
+        //smileDetector.detectMultiScale(cvImage, smileDetections, 1.8, 20, 0, new Size(0,0), new Size(1000, 1000));
 
-        for(Rect rect : faceDetections.toArray()){
-            Imgproc.rectangle(cvImage, new Point(rect.x, rect.y), new Point(rect.x + rect.width, rect.y + rect.height), new Scalar(0,255,0));
-        }
+        //for(Rect rect : faceDetections.toArray()){
+            //Imgproc.rectangle(cvImage, new Point(rect.x, rect.y), new Point(rect.x + rect.width, rect.y + rect.height), new Scalar(0,255,0));
+        //}
   
-        MatOfByte mb = new MatOfByte();
-        Imgcodecs.imencode(".png", cvImage, mb);
-        byte[] cvImageBytes = mb.toArray();
+        //MatOfByte mb = new MatOfByte();
+        //Imgcodecs.imencode(".png", cvImage, mb);
+        //byte[] cvImageBytes = mb.toArray();
 
         Base64.Encoder encoder = Base64.getEncoder();
-        String image = "data:image/png;base64," + encoder.encodeToString(cvImageBytes);
-        model.addAttribute("camFeedback", image);
+        //String image = "data:image/png;base64," + encoder.encodeToString(cvImageBytes);
+        //model.addAttribute("camFeedback", image);
         
-        webcam.close();
+        //webcam.close();
         
         // Producing a kafka simple string msg. Should consist on the encoded img
         // string above and if it's the case, a note stating that the user is smilling
