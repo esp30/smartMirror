@@ -22,6 +22,9 @@ import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.view.RedirectView;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.Base64;
 import java.util.Properties;
 import javax.annotation.PostConstruct;
@@ -81,12 +84,15 @@ public class WebCamController {
 
             CascadeClassifier faceDetector = new CascadeClassifier();
             CascadeClassifier smileDetector = new CascadeClassifier();
+            String tempDir = "frontal";
+            Path tmp = Files.createTempFile(tempDir, "cv");
+            Files.copy(resourceLoader.getResource("classpath:static/haarcascade_frontalface_alt.xml").getInputStream(), tmp, StandardCopyOption.REPLACE_EXISTING);
+            faceDetector.load(tmp.toString());
 
-            File faceCascade = resourceLoader.getResource("classpath:static/haarcascade_frontalface_alt.xml").getFile();
-            faceDetector.load(faceCascade.getAbsolutePath());
-
-            File smileCascade = resourceLoader.getResource("classpath:static/haarcascade_smile.xml").getFile();
-            smileDetector.load(smileCascade.getAbsolutePath());
+            tempDir = "smile";
+            tmp = Files.createTempFile(tempDir, "cv");
+            Files.copy(resourceLoader.getResource("classpath:static/haarcascade_smile.xml").getInputStream(), tmp, StandardCopyOption.REPLACE_EXISTING);
+            smileDetector.load(tmp.toString());
 
             Mat cvImage = Imgcodecs.imdecode(new MatOfByte(imageBytes), Imgcodecs.CV_LOAD_IMAGE_UNCHANGED);
 
