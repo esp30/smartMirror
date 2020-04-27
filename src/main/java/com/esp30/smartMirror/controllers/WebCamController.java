@@ -1,9 +1,6 @@
 package com.esp30.smartMirror.controllers;
 
 import com.esp30.smartMirror.data.Photo;
-import com.github.sarxos.webcam.Webcam;
-import com.github.sarxos.webcam.WebcamResolution;
-import com.github.sarxos.webcam.WebcamUtils;
 import org.opencv.core.*;
 import org.opencv.core.Point;
 import org.opencv.imgcodecs.Imgcodecs;
