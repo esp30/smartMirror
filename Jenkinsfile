@@ -22,8 +22,10 @@ pipeline{
                     sh "ssh -o 'StrictHostKeyChecking=no' -l esp30 192.168.160.103 curl -X GET http://192.168.160.99:8082/artifactory/libs-release-local/com/esp30/smartMirror/0.0.1.1/smartMirror-0.0.1.1.jar --output target/smartMirror-0.0.1.1.jar"
                     sh "scp /var/jenkins_home/workspace/es-2019-2020-P30-mb_master/Dockerfile esp30@192.168.160.103:/home/esp30"
                     sh "ssh -o 'StrictHostKeyChecking=no' -l esp30 192.168.160.103 ./stopCurrentSmartMirror"
-                    sh "ssh -o 'StrictHostKeyChecking=no' -l esp30 192.168.160.103 docker build -t esp30-smartmirror ."
+                    sh "ssh -o 'StrictHostKeyChecking=no' -l esp30 192.168.160.103 docker build --target front-end -t esp30-smartmirror ."
+                    sh "ssh -o 'StrictHostKeyChecking=no' -l esp30 192.168.160.103 docker build --target proc-unit -t esp30-smartmirror-procunit ."
                     sh "ssh -o 'StrictHostKeyChecking=no' -l esp30 192.168.160.103 docker run -d -p 30010:8080 -p 30043:8443 --name esp30-smartmirror esp30-smartmirror"
+                    sh "ssh -o 'StrictHostKeyChecking=no' -l esp30 192.168.160.103 docker run -d --name esp30-smartmirror-procunit esp30-smartmirror-procunit"
                 }
             }
         }
