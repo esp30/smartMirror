@@ -26,29 +26,34 @@
     </style>
 </head>
 <body>
-    <div>
-        <img th:src="${camFeedback}">
-        <h1 th:text="${emotion}"></h1>
+<div>
+    <div align=center>
+        <video id="video" style="position: fixed; right: 0; bottom: 0; height: 100%; width: 100%;" autoplay></video>
+    </div>
 
-        <video id="video" width="640" height="480" autoplay></video>
+    <canvas id="canvas" width="640" height="480" style="display:none"></canvas>
 
-        <canvas id="canvas" width="640" height="480" style="display:none"></canvas>
+    <form th:action="@{/mirror}" method="post" th:object="${photoTaken}">
+        <input style="display: none;" type="text" id="image" th:field="*{b64Encoded}"/>
+    </form>
 
-        <form th:action="@{/mirror}" method="post" th:object="${photoTaken}">
-            <input style="display: none;" type="text" id="image" th:field="*{b64Encoded}"/>
-        </form>
-
-        <div class="row" style="position:fixed;bottom:0;position:fixed;bottom:0;">
-            <div class="column">
-                <button id="btn_send" style="display: none;">Send</button>
+    <div class="row" style="position:fixed;bottom:0;position:fixed;bottom:0;">
+        <div class="column">
+            <div align="center">
+                <input type="image" id="btn_send" alt="Send" src="./img/right.png" style="display: none;" height="80">
+                <!--<button id="btn_send" style="display: none;">Send</button>-->
             </div>
-            <div class="column">
-                <button id="btn_discard" style="display: none;">Discard</button>
+        </div>
+        <div class="column">
+            <div align="center">
+                <input type="image" id="btn_discard" alt="Discard" src="./img/wrong.png" style="display: none;" height="60";>
+                <!--<button id="btn_discard" style="display: none;">Discard</button>-->
             </div>
         </div>
     </div>
+</div>
 
-    <script>
+<script>
         // Thanks davidwalsh for the webcam code
         var video = document.getElementById('video');
 
@@ -59,7 +64,7 @@
             });
         }
     </script>
-    <script>
+<script>
         var canvas = document.getElementById('canvas');
         var context = canvas.getContext('2d');
         var video = document.getElementById('video');
@@ -74,8 +79,8 @@
         }
 
         function changeDisplay(value){
-            document.getElementById("yes").style = "display: " + value;
-            document.getElementById("no").style = "display: " + value;
+            document.getElementById("btn_send").style = "display: " + value;
+            document.getElementById("btn_discard").style = "display: " + value;
         }
 
 
