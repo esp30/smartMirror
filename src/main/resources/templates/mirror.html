@@ -3,53 +3,108 @@
 <head>
     <title>SmartMirror</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <style>
+        * {
+          box-sizing: border-box;
+        }
+        .column {
+          float: left;
+          width: 50%;
+          padding: 10px;
+        }
+        .row {
+          width:100%;
+        }
+        .row:after {
+          content: "";
+          display: table;
+          clear: both;
+        }
+        video {
+          object-fit: fill;
+        }
+    </style>
 </head>
 <body>
 <div>
-    <h1>Very Smart Mirror</h1>
-    <img th:src="${camFeedback}">
-    <h1 th:text="${emotion}"></h1>
+    <div align=center>
+        <video id="video" style="position: fixed; right: 0; bottom: 0; height: 100%; width: 100%;" autoplay></video>
+    </div>
 
-    <video id="video" width="640" height="480" autoplay></video>
-    <button id="snap">Send</button>
-    <canvas id="canvas" width="640" height="480" onclick="getBase64Image()"></canvas>
+    <canvas id="canvas" width="640" height="480" style="display:none"></canvas>
 
     <form th:action="@{/mirror}" method="post" th:object="${photoTaken}">
-        <input type="text" id="image" th:field="*{b64Encoded}"/>
-        <input type="submit"/>
+        <input style="display: none;" type="text" id="image" th:field="*{b64Encoded}"/>
     </form>
+
+    <div class="row" style="position:fixed;bottom:0;position:fixed;bottom:0;">
+        <div class="column">
+            <div align="center">
+                <input type="image" id="btn_send" alt="Send" src="./img/right.png" style="display: none;" height="80">
+                <!--<button id="btn_send" style="display: none;">Send</button>-->
+            </div>
+        </div>
+        <div class="column">
+            <div align="center">
+                <input type="image" id="btn_discard" alt="Discard" src="./img/wrong.png" style="display: none;" height="60";>
+                <!--<button id="btn_discard" style="display: none;">Discard</button>-->
+            </div>
+        </div>
+    </div>
 </div>
 
 <script>
-    // Thanks davidwalsh for the webcam code
-    var video = document.getElementById('video');
+        // Thanks davidwalsh for the webcam code
+        var video = document.getElementById('video');
 
-    if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia){
-        navigator.mediaDevices.getUserMedia({video: true}).then(function (stream) {
-            video.srcObject = stream;
-            video.play();
-        });
-    }
-</script>
+        if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia){
+            navigator.mediaDevices.getUserMedia({video: true}).then(function (stream) {
+                video.srcObject = stream;
+                video.play();
+            });
+        }
+    </script>
 <script>
-    var canvas = document.getElementById('canvas');
-    var context = canvas.getContext('2d');
-    var video = document.getElementById('video');
-
-    document.getElementById("snap").addEventListener("click", function(){
-        context.drawImage(video, 0 ,0, 640, 480);
-    });
-</script>
-<script>
-    function getBase64Image(){
         var canvas = document.getElementById('canvas');
+        var context = canvas.getContext('2d');
+        var video = document.getElementById('video');
 
 
-        var dataURL = canvas.toDataURL("image/png");
-        b64 = dataURL.replace(/^data:image.+;base64,/,'');
-        document.getElementById('image').value=b64
-        document.forms[0].submit()
-    }
-</script>
+        function getBase64Image(){
+            var canvas = document.getElementById('canvas');
+            var dataURL = canvas.toDataURL("image/png");
+            b64 = dataURL.replace(/^data:image.+;base64,/,'');
+            document.getElementById('image').value=b64
+            document.forms[0].submit()
+        }
+
+        function changeDisplay(value){
+            document.getElementById("btn_send").style = "display: " + value;
+            document.getElementById("btn_discard").style = "display: " + value;
+        }
+
+
+        // To avoid JS problems, this may only run after page load
+        window.addEventListener('load', function () {
+
+          document.getElementById("video").addEventListener("click", function(){
+            document.getElementById("video").pause();
+            context.drawImage(video, 0 ,0, 640, 480);
+            changeDisplay("block");
+            });
+
+          document.getElementById("btn_send").addEventListener("click", function(){
+            document.getElementById("video").play();
+            changeDisplay("none");
+            // getBase64Image()
+            });
+
+          document.getElementById("btn_discard").addEventListener("click", function(){
+            document.getElementById("video").play();
+            changeDisplay("none");
+            });
+        })
+
+    </script>
 </body>
 </html>
