@@ -38,7 +38,7 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav">
         <li class="nav-item">
-          <a class="nav-link js-scroll-trigger" href="\mirror">Mirror</a>
+          <a class="nav-link js-scroll-trigger" href="./mirror.html">Mirror</a>
         </li>
         <li class="nav-item">
           <a class="nav-link js-scroll-trigger" href="#tba">TBA</a>
@@ -54,15 +54,18 @@
         <h2 class="mb-5">Very Smart Mirror</h2>
         <video id="video" width="640" height="480" autoplay></video>
         <div class="social-icons">
-          <a id="btn_capture">
+          <input type="image" id="btn_capture" alt="Capture" src="./img/camera.png" style="vertical-align:top; padding-top: 10px;" height="70">
+          <!--<a id="btn_capture">
             <i class="fab"></i>
-          </a>
-          <a id="btn_send">
+          </a>-->
+          <input type="image" id="btn_send" alt="Send" src="./img/right.png" style="vertical-align:top" height="86" onclick="getBase64Image()">
+          <!--<a id="btn_send">
             <i class="fab" onclick="getBase64Image()"></i>
-          </a>
-          <a id="btn_discard">
+          </a>-->
+          <input type="image"  alt="Discard" src="./img/wrong.png" style="vertical-align:top; padding-top: 12px;" height="72" onclick="clear()">
+          <!--<a id="btn_discard">
             <i class="fab" onclick="clear()"></i>
-          </a>
+          </a>-->
         </div>
         <canvas id="canvas" width="640" height="480"></canvas>
 
