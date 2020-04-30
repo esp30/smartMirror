@@ -8,7 +8,7 @@
   <meta name="description" content="">
   <meta name="author" content="">
 
-  <title>Resume - Start Bootstrap Theme</title>
+  <title>SmartMirror</title>
 
   <!-- Bootstrap core CSS -->
   <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -58,20 +58,16 @@
           <!--<a id="btn_capture">
             <i class="fab"></i>
           </a>-->
-          <input type="image" id="btn_send" alt="Send" src="./img/right.png" style="vertical-align:top" height="86" onclick="getBase64Image()">
+          <input type="image" id="btn_send" alt="Send" src="./img/right.png" style="display:none; vertical-align:top" height="86">
           <!--<a id="btn_send">
             <i class="fab" onclick="getBase64Image()"></i>
           </a>-->
-          <input type="image"  alt="Discard" src="./img/wrong.png" style="vertical-align:top; padding-top: 12px;" height="72" onclick="clear()">
+          <input type="image"  id="btn_discard" alt="Discard" src="./img/wrong.png" style="display:none; vertical-align:top; padding-top: 12px;" height="72" onclick="clear()">
           <!--<a id="btn_discard">
             <i class="fab" onclick="clear()"></i>
           </a>-->
         </div>
         <canvas id="canvas" width="640" height="480"></canvas>
-
-        <form th:action="@{/mirror}" method="post" th:object="${photoTaken}">
-          <input style="display: none;" type="text" id="image" th:field="*{b64Encoded}"/>
-        </form>
       </div>
     </section>
 
@@ -298,7 +294,57 @@
     }
   </script>
 
-  <!-- Canvas script -->
+  <script>
+    var canvas = document.getElementById('canvas');
+    var context = canvas.getContext('2d');
+    var video = document.getElementById('video');
+
+
+    function getBase64Image(){
+      var canvas = document.getElementById('canvas');
+      var dataURL = canvas.toDataURL("image/png");
+      b64 = dataURL.replace(/^data:image.+;base64,/,'');
+      document.getElementById('image').value=b64
+      document.forms[0].submit()
+    }
+
+    function changeDisplay(value){
+      document.getElementById("btn_send").style = "vertical-align:top; display: " + value;
+      document.getElementById("btn_discard").style = "vertical-align:top; padding-top: 12px; display: " + value;
+    }
+
+    function clearCanvas() {
+      var canvas = document.getElementById('canvas');
+      var context = canvas.getContext('2d');
+      context.clearRect(0, 0, canvas.width, canvas.height);
+    }
+
+
+    // To avoid JS problems, this may only run after page load
+    window.addEventListener('load', function () {
+
+    document.getElementById("btn_capture").addEventListener("click", function(){
+      //document.getElementById("video").pause();
+      context.drawImage(video, 0 ,0, 640, 480);
+      changeDisplay("inline");
+    });
+
+    document.getElementById("btn_send").addEventListener("click", function(){
+      document.getElementById("video").play();
+      changeDisplay("none");
+      // getBase64Image();
+      clearCanvas();
+    });
+
+    document.getElementById("btn_discard").addEventListener("click", function(){
+      document.getElementById("video").play();
+      changeDisplay("none");
+      clearCanvas();
+      });
+    })
+
+  </script>
+<!--
   <script>
     var canvas = document.getElementById('canvas');
     var context = canvas.getContext('2d');
@@ -308,7 +354,6 @@
     });
   </script>
 
-  <!-- Send -->
   <script>
     function getBase64Image(){
       var canvas = document.getElementById('canvas');
@@ -319,7 +364,6 @@
     }
   </script>
 
-  <!-- Discard -->
   <script>
     var canvas = document.getElementById('canvas');
     var context = canvas.getContext('2d');
@@ -327,7 +371,7 @@
       context.clearRect(0, 0, canvas.width, canvas.height);
     }, false);
   </script>
-
+-->
 </body>
 
 </html>

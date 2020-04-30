@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>SmartMirror</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -33,10 +33,6 @@
 
     <canvas id="canvas" width="640" height="480" style="display:none"></canvas>
 
-    <form th:action="@{/mirror}" method="post" th:object="${photoTaken}">
-        <input style="display: none;" type="text" id="image" th:field="*{b64Encoded}"/>
-    </form>
-
     <div class="row" style="position:fixed;bottom:0;position:fixed;bottom:0;">
         <div class="column">
             <div align="center">
@@ -54,57 +50,57 @@
 </div>
 
 <script>
-        // Thanks davidwalsh for the webcam code
-        var video = document.getElementById('video');
+    // Thanks davidwalsh for the webcam code
+    var video = document.getElementById('video');
 
-        if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia){
-            navigator.mediaDevices.getUserMedia({video: true}).then(function (stream) {
-                video.srcObject = stream;
-                video.play();
-            });
-        }
-    </script>
+    if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia){
+        navigator.mediaDevices.getUserMedia({video: true}).then(function (stream) {
+            video.srcObject = stream;
+            video.play();
+        });
+    }
+</script>
 <script>
+    var canvas = document.getElementById('canvas');
+    var context = canvas.getContext('2d');
+    var video = document.getElementById('video');
+
+
+    function getBase64Image(){
         var canvas = document.getElementById('canvas');
-        var context = canvas.getContext('2d');
-        var video = document.getElementById('video');
+        var dataURL = canvas.toDataURL("image/png");
+        b64 = dataURL.replace(/^data:image.+;base64,/,'');
+        document.getElementById('image').value=b64
+        document.forms[0].submit()
+    }
+
+    function changeDisplay(value){
+        document.getElementById("btn_send").style = "display: " + value;
+        document.getElementById("btn_discard").style = "display: " + value;
+    }
 
 
-        function getBase64Image(){
-            var canvas = document.getElementById('canvas');
-            var dataURL = canvas.toDataURL("image/png");
-            b64 = dataURL.replace(/^data:image.+;base64,/,'');
-            document.getElementById('image').value=b64
-            document.forms[0].submit()
-        }
+    // To avoid JS problems, this may only run after page load
+    window.addEventListener('load', function () {
 
-        function changeDisplay(value){
-            document.getElementById("btn_send").style = "display: " + value;
-            document.getElementById("btn_discard").style = "display: " + value;
-        }
+      document.getElementById("video").addEventListener("click", function(){
+        document.getElementById("video").pause();
+        context.drawImage(video, 0 ,0, 640, 480);
+        changeDisplay("block");
+        });
 
+      document.getElementById("btn_send").addEventListener("click", function(){
+        document.getElementById("video").play();
+        changeDisplay("none");
+        // getBase64Image()
+        });
 
-        // To avoid JS problems, this may only run after page load
-        window.addEventListener('load', function () {
+      document.getElementById("btn_discard").addEventListener("click", function(){
+        document.getElementById("video").play();
+        changeDisplay("none");
+        });
+    })
 
-          document.getElementById("video").addEventListener("click", function(){
-            document.getElementById("video").pause();
-            context.drawImage(video, 0 ,0, 640, 480);
-            changeDisplay("block");
-            });
-
-          document.getElementById("btn_send").addEventListener("click", function(){
-            document.getElementById("video").play();
-            changeDisplay("none");
-            // getBase64Image()
-            });
-
-          document.getElementById("btn_discard").addEventListener("click", function(){
-            document.getElementById("video").play();
-            changeDisplay("none");
-            });
-        })
-
-    </script>
+</script>
 </body>
 </html>
