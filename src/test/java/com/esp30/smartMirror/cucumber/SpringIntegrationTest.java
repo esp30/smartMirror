@@ -7,16 +7,24 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.test.context.SpringBootContextLoader;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.web.WebAppConfiguration;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-@ContextConfiguration(classes = SmartMirrorApplication.class, loader = SpringBootContextLoader.class)
-public class CucumberSpringConfiguration {
+@ContextConfiguration(
+        classes = SmartMirrorApplication.class,
+        loader = SpringBootContextLoader.class)
+@WebAppConfiguration
+@SpringBootTest
+public class SpringIntegrationTest {
 
-    private static final Logger log = LoggerFactory.getLogger(CucumberSpringConfiguration.class);
+    private static final Logger log = LoggerFactory.getLogger(SpringIntegrationTest.class);
 
     @Before
     public void setUp() {
         log.info("-------------- Spring Context Initialized For Executing Cucumber Tests --------------");
+    }
+
+    @cucumber.api.java.en.And("^internet connection$")
+    public void internetConnection() {
     }
 }
 
