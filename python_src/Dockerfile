@@ -29,7 +29,7 @@ RUN mkdir -p ~/dlib \
 # Install packages for Python
 RUN pkg-config --libs --cflags dlib-1 \
     && cd ~/dlib/dlib-19.19 \
-    && python setup.py install –no DLIB_USE_CUDA –yes USE_SSE2_INSTRUCTIONS \
+    && python setup.py install --no DLIB_USE_CUDA --yes USE_SSE2_INSTRUCTIONS \
     && rm -rf ~/dlib /var/cache/apk/* /usr/share/man /usr/local/share/man /tmp/*
 
 # Run facial recog app
