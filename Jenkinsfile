@@ -19,9 +19,7 @@ pipeline{
 
         stage('Deploy back-end'){
             steps{
-                sh "docker build -t esp30-smartmirror-procunit python_src/."
-                sh "docker tag esp30-smartmirror-procunit 192.168.160.99:5000/esp30-smartmirror-procunit"
-                sh "docker push 192.168.160.99:5000/esp30-smartmirror-procunit"
+                sh "echo deployed on local machine"
             }
         }
         stage('Deploy on runtime'){
