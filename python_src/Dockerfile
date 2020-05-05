@@ -19,7 +19,7 @@ RUN mkdir -p ~/dlib \
     && cd ~/dlib/dlib-19.19 \
     && mkdir build \
     && cd build \
-    && cmake .. \
+    && cmake .. -DUSE_SSE2_INSTRUCTIONS=ON \
     && cmake --build . --config Release \
     && make -j${CPUCORES} \
     && cd ~/dlib/dlib-19.19/build \
