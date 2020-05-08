@@ -1,3 +1,4 @@
+@online
 Feature: F2 - Remotely Check Patient Status
 
   Scenario: Notification

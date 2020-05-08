@@ -5,7 +5,6 @@ import cucumber.api.junit.Cucumber;
 import org.junit.runner.RunWith;
 
 @RunWith(Cucumber.class)
-@CucumberOptions(features = "src/test/resources/features", plugin = {"pretty",
-        "json:target/cucumber-report.json"})
+@CucumberOptions(features = "src/test/resources/features", glue="com.esp30.smartMirror.bdd.stepdefs", plugin = {"pretty", "json:target/cucumber-report.json", "html:target/cucumber-report-html", "junit:target/cucumber-junit.xml"})
 public class CucumberTest {
 }

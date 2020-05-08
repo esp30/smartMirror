@@ -22,6 +22,19 @@ pipeline{
                 sh "echo deployed on local machine"
             }
         }
+        stage('Cucumber Tests' {
+            parallel(
+                "Online Tests":
+                {
+                    sh 'mvn test -Dcucumber.options="--tags @offline --tags ~@not-implemented" -s settings.xml'
+                },
+                "Offline Tests":
+                {
+                    sh 'mvn test -Dcucumber.options="--tags @online --tags ~@not-implemented" -s settings.xml'
+                }
+            )
+        }
+                
         stage('Deploy on runtime'){
             steps{
                 sshagent(credentials: ['esp30-ssh-deploy']){
@@ -33,5 +46,12 @@ pipeline{
                 }
             }
         }
+        stage ('Prepare Reports') {
+            steps {
+                cucumber buildStatus: "stable",
+                    fileIncludePattern: "**/cucumber-report.json",
+                    jsonReportDirectory: 'target'
+            }
+     }  
     }
 }

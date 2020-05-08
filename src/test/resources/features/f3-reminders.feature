@@ -1,3 +1,5 @@
+@online
+@not-implemented
 Feature: F3 - Reminders
 
   Scenario: Set Reminder

@@ -1,5 +1,5 @@
-package com.esp30.smartMirror.cucumber;
-
+package com.esp30.smartMirror.bdd.stepdefs;
+import cucumber.api.java.en.*;
 /**
  * smartMirror - com.esp30.smartMirror.cucumber.PatientStatusSteps <br>
  *
@@ -8,27 +8,27 @@ package com.esp30.smartMirror.cucumber;
  */
 public class PatientStatusSteps {
 
-    @cucumber.api.java.en.And("^a medical professional that cares for said user$")
+    @And("^a medical professional that cares for said user$")
     public void aMedicalProfessionalThatCaresForSaidUser() {
     }
 
-    @cucumber.api.java.en.And("^a mobile app that accesses the system's public API$")
+    @And("^a mobile app that accesses the system's public API$")
     public void aMobileAppThatAccessesTheSystemSPublicAPI() {
     }
 
-    @cucumber.api.java.en.When("^the system records a status \\(mood\\) change with the user$")
+    @When("^the system records a status \\(mood\\) change with the user$")
     public void theSystemRecordsAStatusMoodChangeWithTheUser() {
     }
 
-    @cucumber.api.java.en.Then("^the medical professional should be notified via the mobile app$")
+    @Then("^the medical professional should be notified via the mobile app$")
     public void theMedicalProfessionalShouldBeNotifiedViaTheMobileApp() {
     }
 
-    @cucumber.api.java.en.When("^the medical professional wishes to check on their patient latest reports$")
+    @When("^the medical professional wishes to check on their patient latest reports$")
     public void theMedicalProfessionalWishesToCheckOnTheirPatientLatestReports() {
     }
 
-    @cucumber.api.java.en.Then("^the medical professional should be able to access that information using the mobile app$")
+    @Then("^the medical professional should be able to access that information using the mobile app$")
     public void theMedicalProfessionalShouldBeAbleToAccessThatInformationUsingTheMobileApp() {
     }
 }

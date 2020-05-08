@@ -1,3 +1,4 @@
+@offline
 Feature: F1 - Report Status
 
   Scenario: Choose to Report
