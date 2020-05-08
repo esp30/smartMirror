@@ -23,16 +23,18 @@ pipeline{
             }
         }
         stage('Cucumber Tests') {
-            parallel(
-                "Online Tests":
-                {
-                    sh 'mvn test -Dcucumber.options="--tags @offline --tags ~@not-implemented" -s settings.xml'
-                },
-                "Offline Tests":
-                {
-                    sh 'mvn test -Dcucumber.options="--tags @online --tags ~@not-implemented" -s settings.xml'
-                }
-            )
+            steps {
+                parallel(
+                    "Online Tests":
+                    {
+                        sh 'mvn test -Dcucumber.options="--tags @offline --tags ~@not-implemented" -s settings.xml'
+                    },
+                    "Offline Tests":
+                    {
+                        sh 'mvn test -Dcucumber.options="--tags @online --tags ~@not-implemented" -s settings.xml'
+                    }
+                )
+            }
         }
                 
         stage('Deploy on runtime'){
