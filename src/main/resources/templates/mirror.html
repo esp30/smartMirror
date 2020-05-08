@@ -3,35 +3,16 @@
 <head>
     <title>SmartMirror</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <style>
-        * {
-          box-sizing: border-box;
-        }
-        .column {
-          float: left;
-          width: 50%;
-          padding: 10px;
-        }
-        .row {
-          width:100%;
-        }
-        .row:after {
-          content: "";
-          display: table;
-          clear: both;
-        }
-        video {
-          object-fit: fill;
-        }
-    </style>
 </head>
 <body>
 <div>
-    <div align=center>
-        <video id="video" style="position: fixed; right: 0; bottom: 0; height: 100%; width: 100%;" autoplay></video>
-    </div>
+    <h1>Very Smart Mirror</h1>
+    <img th:src="${camFeedback}">
+    <h1 th:text="${emotion}"></h1>
 
-    <canvas id="canvas" width="640" height="480" style="display:none"></canvas>
+    <video id="video" width="640" height="480" autoplay></video>
+    <button id="snap">Send</button>
+    <canvas id="canvas" width="640" height="480" onclick="getBase64Image()"></canvas>
 
     <div class="row" style="position:fixed;bottom:0;position:fixed;bottom:0;">
         <div class="column">
@@ -47,6 +28,7 @@
             </div>
         </div>
     </div>
+
 </div>
 
 <script>
@@ -60,6 +42,7 @@
         });
     }
 </script>
+
 <script>
     var canvas = document.getElementById('canvas');
     var context = canvas.getContext('2d');
@@ -100,6 +83,7 @@
         changeDisplay("none");
         });
     })
+
 
 </script>
 </body>
