@@ -25,11 +25,11 @@ pipeline{
         stage('Cucumber Tests') {
             steps {
                 parallel(
-                    "Online Tests":
+                    "Offline Tests":
                     {
                         sh 'mvn test -Dcucumber.options="--tags @offline --tags ~@not-implemented" -s settings.xml'
                     },
-                    "Offline Tests":
+                    "Online Tests":
                     {
                         sh 'mvn test -Dcucumber.options="--tags @online --tags ~@not-implemented" -s settings.xml'
                     }
