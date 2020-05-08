@@ -22,7 +22,7 @@ pipeline{
                 sh "echo deployed on local machine"
             }
         }
-        stage('Cucumber Tests' {
+        stage('Cucumber Tests') {
             parallel(
                 "Online Tests":
                 {
