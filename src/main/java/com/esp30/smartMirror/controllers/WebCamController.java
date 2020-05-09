@@ -60,11 +60,11 @@ public class WebCamController {
     @PostConstruct
     public void init(){
         logger.info("Initializing webcam controller");
-        prod_properties.put("bootstrap.servers", "192.168.160.103:9092");
+        prod_properties.put("bootstrap.servers", "192.168.160.103:9093");
         prod_properties.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
         prod_properties.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer");
         
-        con_properties.put("bootstrap.servers", "192.168.160.103:9092");
+        con_properties.put("bootstrap.servers", "192.168.160.103:9093");
         con_properties.put("key.deserializer", LongDeserializer.class.getName());
         con_properties.put("value.deserializer" , StringDeserializer.class.getName());
         con_properties.put("group.id" , "p30");
@@ -157,7 +157,7 @@ public class WebCamController {
             logger.info(jsonObject);
             try{
                 logger.info("Producing kafka string message!");
-                kafkaProducer.send(new ProducerRecord("p30-test-topic", Integer.toString(0), jsonObject));
+                kafkaProducer.send(new ProducerRecord("p30-photos", Integer.toString(0), jsonObject));
             }catch (Exception e){
                 e.printStackTrace();
             }finally {
@@ -167,7 +167,7 @@ public class WebCamController {
             
             // Changed so sync waiting for message cause async wasn't working as expected
             kafkaConsumer = new KafkaConsumer(con_properties);
-            kafkaConsumer.subscribe(Collections.singletonList("p30-test-topic2"));
+            kafkaConsumer.subscribe(Collections.singletonList("p30-classification"));
             
             
             // 3 second wait total
@@ -226,7 +226,7 @@ public class WebCamController {
     @Bean
     public ConsumerFactory<?, ?> kafkaConsumerFactory(KafkaProperties properties) {
         Map<String, Object> props = properties.buildConsumerProperties();
-        props.put(org.apache.kafka.clients.CommonClientConfigs.BOOTSTRAP_SERVERS_CONFIG, "192.168.160.103:9092");
+        props.put(org.apache.kafka.clients.CommonClientConfigs.BOOTSTRAP_SERVERS_CONFIG, "192.168.160.103:9093");
         return new DefaultKafkaConsumerFactory<>(props);
     }
 
