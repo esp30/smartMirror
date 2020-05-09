@@ -1,4 +1,4 @@
-String cron_job = BRANCH_NAME == "master" ? "@hourly" : ""
+String cron_job = BRANCH_NAME == "master" ? "@daily" : ""
 pipeline{
     agent any
     triggers { cron(cron_job) }

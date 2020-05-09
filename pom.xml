@@ -105,6 +105,11 @@
                     <artifactId>org.json</artifactId>
                     <version>chargebee-1.0</version>
                     </dependency>
+		<dependency>
+			<groupId>com.internetitem</groupId>
+			<artifactId>logback-elasticsearch-appender</artifactId>
+			<version>1.6</version>
+		</dependency>
 	</dependencies>
 
 	<build>

@@ -3,6 +3,7 @@
 
 FROM openjdk:8-jre-alpine AS front-end
 WORKDIR /usr/local/runme
+ENV CN=esp30_smartMirrorFE
 COPY target/smartMirror-0.0.1.1.jar smartMirror.jar
 ENTRYPOINT ["java", "-jar", "smartMirror.jar"]
 
