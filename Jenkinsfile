@@ -54,10 +54,11 @@ pipeline{
         }
         stage ('Prepare Reports') {
             steps {
-                cucumber buildStatus: "stable",
-                    fileIncludePattern: "**/cucumber-report.json",
-                    jsonReportDirectory: 'target'
+            cucumber buildStatus: "stable",
+                fileIncludePattern: "**/cucumber/report.json",
+                jsonReportDirectory: 'target'
+            sh 'exit 0'
             }
-     }  
+        }  
     }
 }
