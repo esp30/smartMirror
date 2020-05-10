@@ -24,7 +24,7 @@ Feature: F2 - Remotely Check Patient Status
 
   And a mobile app that accesses the system's public API
 
-  #And internet connection
+  And internet connection
 
   When the medical professional wishes to check on their patient latest reports
 
