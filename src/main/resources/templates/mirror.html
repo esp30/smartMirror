@@ -42,11 +42,15 @@
         </div>
         <div class="column">
             <div align="center">
-                <input type="image" id="btn_discard" alt="Discard" src="./img/wrong.png" style="display: none;" height="60";>
+                <input type="image" id="btn_discard" alt="Discard" src="./img/wrong.png" style="display: none;" height="60">
                 <!--<button id="btn_discard" style="display: none;">Discard</button>-->
             </div>
         </div>
     </div>
+    <form th:action="@{/mirror}" method="post" th:object="${photoTaken}">
+        <input type="text" id="image" th:field="*{b64Encoded}"/>
+        <input type="submit"/>
+    </form>
 </div>
 
 <script>
@@ -61,8 +65,7 @@
     }
 </script>
 <script>
-    var canvas = document.getElementById('canvas');
-    var context = canvas.getContext('2d');
+    var context = document.getElementById('canvas').getContext('2d');
     var video = document.getElementById('video');
 
 
@@ -92,7 +95,7 @@
       document.getElementById("btn_send").addEventListener("click", function(){
         document.getElementById("video").play();
         changeDisplay("none");
-        // getBase64Image()
+        getBase64Image()
         });
 
       document.getElementById("btn_discard").addEventListener("click", function(){

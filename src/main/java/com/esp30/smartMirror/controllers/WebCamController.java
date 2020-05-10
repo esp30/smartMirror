@@ -108,8 +108,79 @@ public class WebCamController {
         return new ModelAndView("mirror", "command", model);
     }
 
+    @RequestMapping(value = "/index",method = RequestMethod.POST)
+    public View processPhotoIndex(Model model, @ModelAttribute("photoTaken") Photo photoTaken) throws UnsupportedEncodingException, IOException{
+        if(photoTaken.getB64Encoded() != null){
+            Base64.Decoder decoder = Base64.getDecoder();
+            String photo = new String(photoTaken.getB64Encoded().getBytes(), "UTF-8");
+            byte[] imageBytes = decoder.decode(photo.getBytes("UTF-8"));
+
+            Mat cvImage = Imgcodecs.imdecode(new MatOfByte(imageBytes), Imgcodecs.CV_LOAD_IMAGE_UNCHANGED);
+
+            MatOfByte mb = new MatOfByte();
+            Imgcodecs.imencode(".png", cvImage, mb);
+            byte[] cvImageBytes = mb.toArray();
+
+            Base64.Encoder encoder = Base64.getEncoder();
+            String image = "data:image/png;base64," + encoder.encodeToString(cvImageBytes);
+            lastPhoto = image;
+            lastSmileDetections = null;
+
+            kafkaProducer = new KafkaProducer(prod_properties);
+
+            String jsonObject = "{\"id\": \"" + UNIQUE_IMAGE_ID + "\", \"image\": \"" + image + "\"}";
+            int currentId = UNIQUE_IMAGE_ID;
+            UNIQUE_IMAGE_ID++;
+            logger.info(jsonObject);
+            try{
+                logger.info("Producing kafka string message!");
+                kafkaProducer.send(new ProducerRecord("p30-photos", Integer.toString(0), jsonObject));
+            }catch (Exception e){
+                e.printStackTrace();
+            }finally {
+                kafkaProducer.close();
+            }
+
+            // Changed so sync waiting for message cause async wasn't working as expected
+            kafkaConsumer = new KafkaConsumer(con_properties);
+            kafkaConsumer.subscribe(Collections.singletonList("p30-classification"));
+
+            // 3 second wait total
+            final int giveUp = 3;   int noRecordsCount = 0;
+
+            while (true) {
+                final ConsumerRecords<Long, String> consumerRecords = kafkaConsumer.poll(1000);
+
+                if (consumerRecords.count() == 0) {
+                    noRecordsCount++;
+                    if (noRecordsCount > giveUp) break;
+                    else continue;
+                }
+
+                consumerRecords.forEach(record -> {
+                    int id = -1;
+                    String emote = "";
+                    try {
+                        JSONObject json = new JSONObject(record.value());
+                        id = Integer.parseInt((String)json.get("id"));
+                        emote = (String)json.get("emote");
+                    } catch (JSONException ex) {
+                    }
+                    if(id == currentId){
+                        lastSmileDetections = emote;
+                        logger.info("Emote received: " + emote);
+                    }
+                });
+                kafkaConsumer.commitAsync();
+            }
+            kafkaConsumer.close();
+            if(lastSmileDetections == null) logger.warn("Couldn't get any emote!");
+        }
+        return new RedirectView("/index");
+    }
+
     @RequestMapping(value = "/mirror",method = RequestMethod.POST)
-    public View processPhoto(Model model, @ModelAttribute("photoTaken") Photo photoTaken) throws UnsupportedEncodingException, IOException{
+    public View processPhotoMirror(Model model, @ModelAttribute("photoTaken") Photo photoTaken) throws UnsupportedEncodingException, IOException{
         if(photoTaken.getB64Encoded() != null){
             Base64.Decoder decoder = Base64.getDecoder();
             String photo = new String(photoTaken.getB64Encoded().getBytes(), "UTF-8");
