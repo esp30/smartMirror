@@ -6,7 +6,7 @@ Feature: F3 - Reminders
 
     Given a user
 
-    And internet connection
+    #And internet connection
 
     When the user says "Set reminder for 10 o'clock"
 
