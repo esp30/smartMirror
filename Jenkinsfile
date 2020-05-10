@@ -19,7 +19,9 @@ pipeline{
 
         stage('Deploy back-end'){
             steps{
-                sh "echo deployed on local machine"
+                sh "docker build -t esp30-smartmirror-emotiondetection python_src/."
+                sh "docker tag esp30-smartmirror-emotiondetection 192.168.160.99:5000/esp30-smartmirror-emotiondetection"
+                sh "docker push 192.168.160.99:5000/esp30-smartmirror-emotiondetection"
             }
         }
         stage('Cucumber Tests') {
@@ -44,7 +46,9 @@ pipeline{
                     sh "scp /var/jenkins_home/workspace/es-2019-2020-P30-mb_master/Dockerfile esp30@192.168.160.103:/home/esp30"
                     sh "ssh -o 'StrictHostKeyChecking=no' -l esp30 192.168.160.103 ./stopCurrentSmartMirror"
                     sh "ssh -o 'StrictHostKeyChecking=no' -l esp30 192.168.160.103 docker build --target front-end -t esp30-smartmirror ."
+                    sh "ssh -o 'StrictHostKeyChecking=no' -l esp30 192.168.160.103 docker pull 192.168.160.99:5000/esp30-smartmirror-emotiondetection"
                     sh "ssh -o 'StrictHostKeyChecking=no' -l esp30 192.168.160.103 docker run -d -p 30010:8080 -p 30043:8443 --name esp30-smartmirror esp30-smartmirror"
+                    sh "ssh -o 'StrictHostKeyChecking=no' -l esp30 192.168.160.103 docker run -d --name esp30-smartmirror-emotiondetection 192.168.160.99:5000/esp30-smartmirror-emotiondetection"
                 }
             }
         }
