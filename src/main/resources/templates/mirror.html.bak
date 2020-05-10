@@ -1,0 +1,55 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>SmartMirror</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+<div>
+    <h1>Very Smart Mirror</h1>
+    <img th:src="${camFeedback}">
+    <h1 th:text="${emotion}"></h1>
+
+    <video id="video" width="640" height="480" autoplay></video>
+    <button id="snap">Send</button>
+    <canvas id="canvas" width="640" height="480" onclick="getBase64Image()"></canvas>
+
+    <form th:action="@{/mirror}" method="post" th:object="${photoTaken}">
+        <input type="text" id="image" th:field="*{b64Encoded}"/>
+        <input type="submit"/>
+    </form>
+</div>
+
+<script>
+    // Thanks davidwalsh for the webcam code
+    var video = document.getElementById('video');
+
+    if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia){
+        navigator.mediaDevices.getUserMedia({video: true}).then(function (stream) {
+            video.srcObject = stream;
+            video.play();
+        });
+    }
+</script>
+<script>
+    var canvas = document.getElementById('canvas');
+    var context = canvas.getContext('2d');
+    var video = document.getElementById('video');
+
+    document.getElementById("snap").addEventListener("click", function(){
+        context.drawImage(video, 0 ,0, 640, 480);
+    });
+</script>
+<script>
+    function getBase64Image(){
+        var canvas = document.getElementById('canvas');
+
+
+        var dataURL = canvas.toDataURL("image/png");
+        b64 = dataURL.replace(/^data:image.+;base64,/,'');
+        document.getElementById('image').value=b64
+        document.forms[0].submit()
+    }
+</script>
+</body>
+</html>
