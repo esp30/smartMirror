@@ -1,32 +1,35 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- *//*
 package com.esp30.smartMirror.controllers;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
-import javax.annotation.PostConstruct;
-import org.apache.kafka.clients.consumer.KafkaConsumer;
+import com.esp30.smartMirror.data.Emotion;
+import com.esp30.smartMirror.data.EmotionRepository;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @Component
 public class DBController {
-    
-    private static final Logger logger = LoggerFactory.getLogger(DBController.class);
 
+    @Autowired
+    private EmotionRepository emotionRepository;
     
-    @KafkaListener(topics = "happy-people", groupId="p30")
-    public void listen(String msg)
-    {
-        logger.info("Received Messasge in group foo: " + msg.substring(0, 20));
-        // Write info to DB
+    private Logger logger = LoggerFactory.getLogger(DBController.class);
+
+    @KafkaListener(topics = "p30-classification", groupId="db")
+    public void listen(String msg) {
+        logger.info("Received Message in group: " + msg);
+
+        try {
+            JSONObject json = new JSONObject(msg);
+            Emotion emotion = new Emotion("Default User", (String) json.get("emote"));
+            emotionRepository.save(emotion);
+        }
+        catch (JSONException err){
+            logger.error("Error", err.toString());
+        }
     }
-    
-}*/
+}
 
