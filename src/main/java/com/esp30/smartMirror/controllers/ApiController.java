@@ -1,6 +1,7 @@
 package com.esp30.smartMirror.controllers;
 
 import com.esp30.smartMirror.data.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -9,6 +10,9 @@ import java.util.ArrayList;
 
 @RestController
 public class ApiController {
+
+    @Autowired
+    private EmotionRepository emotionRepository;
 
     @GetMapping("/users")
     public ArrayList<User> users() {
@@ -32,12 +36,10 @@ public class ApiController {
     }
 
     @GetMapping("/emotions")
-    public ArrayList<Emotion> emotions(@RequestParam(value = "id") int id, @RequestParam(value = "hist", defaultValue = "10") int hist) {
-        // Fetch user emotions from somewhere
-
-        // Temporary
+    public ArrayList<Emotion> emotions() {
         ArrayList<Emotion> emotions = new ArrayList<>();
-        emotions.add(new Emotion(new User("Rui", 50), "Sad"));
+        emotionRepository.findAll().forEach(emotions::add);
+
         return emotions;
     }
 }
