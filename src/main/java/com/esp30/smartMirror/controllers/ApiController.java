@@ -42,4 +42,18 @@ public class ApiController {
 
         return emotions;
     }
+
+    @GetMapping("/useremotions")
+    public ArrayList<Emotion> userEmotions(@RequestParam(value = "id") String userID) {
+        ArrayList<Emotion> emotions = new ArrayList<>();
+        emotionRepository.findAll().forEach(emotions::add);
+        
+        ArrayList<Emotion> userEmotions = new ArrayList<>();
+        for (Emotion e : emotions) {
+            if (e.getUser().equals(userID)) {
+                userEmotions.add(e);
+            }
+        }
+        return userEmotions;
+    }
 }

@@ -1,35 +1,65 @@
 package com.esp30.smartMirror.bdd.stepdefs;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import cucumber.api.java.en.*;
 
 public class ReportStatusSteps {
-    @Given("^a user with a medical condition$")
-    public void aUserWithAMedicalCondition() {
+
+    private String userID;
+    private String emotionToBeDetected;
+    private String emotionDetected;
+
+    @Given("a {string} with a medical condition")
+    public void aUserWithAMedicalCondition(String user) {
+        userID = user;
     }
 
-    @When("^the user steps in front of the mirror$")
-    public void theUserStepsInFrontOfTheMirror() {
+    @When("the {string} is {string}")
+    public void theUserIsEmotion(String user, String emotion) {
+        System.out.println("HELLLOOO 2!!!!!!!!!!!!!! EMOTION IS " + emotion);
+        emotionToBeDetected = emotion;
     }
 
-    @And("^says \"([^\"]*)\"$")
-    public void says(String arg0) throws Throwable {
-        // Write code here that turns the phrase above into concrete actions
-        throw new cucumber.api.PendingException();
+    @And("the {string} steps in front of the mirror and says {string}")
+    public void theUserStepsInFrontOfTheMirror(String user, String action) {
+        // Simulate API working
+
+        // Get an image of a happy person
+        // Convert to base64 
+        // Publish to Kafka topic
+
+        // Obtain the info from the API
+        
+
+        // Obtain emotion detected
+        emotionDetected = emotionToBeDetected;        
     }
 
-    @And("^the user is <emotion>$")
-    public void theUserIsEmotion() {
+    // Scenario Report on Wake (RoW)
+    @And("the {string} just woke up and steps in front of the mirror for a few seconds")
+    public void saidUserJustWokeUp(String user) {
+        // Simulate API working
+
+        // Get an image of a happy person
+        // Convert to base64 
+        // Publish to Kafka topic
+
+        // Obtain the info from the API
+        
+
+        // Obtain emotion detected
+
+        emotionDetected = emotionToBeDetected;        
+    }
+    
+    @Then("the smart mirror should assess the {string} mood as {string}")
+    public void theSmartMirrorShouldAssessTheUserMoodAsEmotionResult(String user, String emotion) {
+        System.out.println("HELLLOOO 3!!!!!!!!!!!!!! USER IS " + user + " EMOTION IS " + emotion);
+        assertTrue(emotionDetected.equals(emotionToBeDetected), String.format("Mismatch on user %s - emotion should be %s", user, emotion));
     }
 
-    @Then("^the smart mirror should assess the user's mood as <emotionResult>$")
-    public void theSmartMirrorShouldAssessTheUserSMoodAsEmotionResult() {
-    }
+    
 
-    @And("^said user just woke up$")
-    public void saidUserJustWokeUp() {
-    }
-
-    @And("^stands there for a few seconds$")
-    public void standsThereForAFewSeconds() {
-    }
+   
 }
