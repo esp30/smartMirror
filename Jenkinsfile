@@ -5,7 +5,7 @@ pipeline{
     parameters {
         choice(
             name:'pipeline_type',
-            choices: 'Test + Deploy\nDeploy\nTest'
+            choices: 'Test + Deploy\nDeploy\nTest',
             description: 'Run the entire pipeline or only some parts of it'
         )
     }
