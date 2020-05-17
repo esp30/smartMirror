@@ -4,14 +4,18 @@ pipeline{
     triggers { cron(cron_job) }
     parameters {
         choice(
-            name:'pipeline_type',
+            name:'pipelineType',
             choices: 'Test + Deploy\nDeploy\nTest',
             description: 'Run the entire pipeline or only some parts of it'
         )
     }
     stages {
         stage('Test'){
+            when {
+                expression { params.pipelineType == 'Test + Deploy' || params.pipelineType == 'Test'}
+            }
             steps{
+                echo "Pipeline type ${params.pipeline_type}"
                 sshagent(credentials: ['esp30-ssh-deploy']){
                     sh 'echo "testing ssh connection"'
                     sh "ssh -o 'StrictHostKeyChecking=no' -l esp30 192.168.160.103 uname -a"
@@ -19,12 +23,18 @@ pipeline{
             }
         }
         stage('Deploy to Artifactory'){
+            when {
+                expression { params.pipelineType == 'Test + Deploy' || params.pipelineType == 'Deploy'}
+            }
             steps{
                 sh 'mvn deploy -s settings.xml -DskipTests'
             }
         }
 
         stage('Deploy back-end'){
+            when {
+                expression { params.pipelineType == 'Test + Deploy' || params.pipelineType == 'Deploy'}
+            }
             steps{
                 sh "docker build -t esp30-smartmirror-emotiondetection python_src/."
                 sh "docker tag esp30-smartmirror-emotiondetection 192.168.160.99:5000/esp30-smartmirror-emotiondetection"
@@ -32,6 +42,9 @@ pipeline{
             }
         }
         stage('Cucumber Tests') {
+            when {
+                expression { params.pipelineType == 'Test + Deploy' || params.pipelineType == 'Test'}
+            }
             steps {
                 parallel(
                     "Offline Tests":
@@ -47,6 +60,9 @@ pipeline{
         }
                 
         stage('Deploy on runtime'){
+            when {
+                expression { params.pipelineType == 'Test + Deploy' || params.pipelineType == 'Deploy'}
+            }
             steps{
                 sshagent(credentials: ['esp30-ssh-deploy']){
                     sh "ssh -o 'StrictHostKeyChecking=no' -l esp30 192.168.160.103 curl -X GET http://192.168.160.99:8082/artifactory/libs-release-local/com/esp30/smartMirror/0.0.1.1/smartMirror-0.0.1.1.jar --output target/smartMirror-0.0.1.1.jar"
@@ -60,6 +76,9 @@ pipeline{
             }
         }
         stage ('Prepare Reports') {
+            when {
+                expression { params.pipelineType == 'Test + Deploy' || params.pipelineType == 'Test'}
+            }
             steps {
                 cucumber buildStatus: "SUCCESS",
                     fileIncludePattern: "**/cucumber/report.json",
