@@ -17,7 +17,6 @@ public class ReportStatusSteps {
 
     @When("the {string} is {string}")
     public void theUserIsEmotion(String user, String emotion) {
-        System.out.println("HELLLOOO 2!!!!!!!!!!!!!! EMOTION IS " + emotion);
         emotionToBeDetected = emotion;
     }
 

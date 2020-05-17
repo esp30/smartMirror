@@ -12,7 +12,7 @@ Feature: F1 - Report Status
     | user         | emotion   | emotionResult   | 
     | "Mariana"    |  "happy"  |      "N/A"      |   
     | "Tiago"      |   "sad"   |      "N/A"      |
-    | "Raquel"     | " happy " |      "N/A "     |
+    | "Raquel"     |  "happy"  |      "N/A"      |
 
 
     Scenario Outline: Report on Wake (RoW)
