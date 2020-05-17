@@ -2,6 +2,13 @@ String cron_job = BRANCH_NAME == "master" ? "@daily" : ""
 pipeline{
     agent any
     triggers { cron(cron_job) }
+    parameters {
+        choice(
+            name:'pipeline_type',
+            choices: 'Test + Deploy\nDeploy\nTest'
+            description: 'Run the entire pipeline or only some parts of it'
+        )
+    }
     stages {
         stage('Test'){
             steps{
