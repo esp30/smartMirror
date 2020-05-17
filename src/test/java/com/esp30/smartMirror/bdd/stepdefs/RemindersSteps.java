@@ -6,13 +6,12 @@ import cucumber.api.java.en.*;
 public class RemindersSteps {
     @Given("^a user$")
     public void aUser() {
-        //assertTrue(false); // TESTING PURPOSES -> SHOULD FAIL
     }
 
     @When("^the user says \"([^\"]*)\"$")
     public void theUserSays(String arg0) throws Throwable {
         // Write code here that turns the phrase above into concrete actions
-        // throw new cucumber.api.PendingException();
+        throw new cucumber.api.PendingException();
     }
 
     @Then("^the smart mirror should set a reminder with an associated alarm set to go off at (\\d+) o'clock$")

@@ -1,34 +1,33 @@
 package com.esp30.smartMirror.bdd.stepdefs;
 import cucumber.api.java.en.*;
-/**
- * smartMirror - com.esp30.smartMirror.cucumber.PatientStatusSteps <br>
- *
- * @author Pedro Teixeira pedro.teix@ua.pt
- * @version 1.0 - April 30, 2020
- */
+
 public class PatientStatusSteps {
 
-    @And("^a medical professional that cares for said user$")
-    public void aMedicalProfessionalThatCaresForSaidUser() {
+    @Given("^a medical professional that needs to know the trends of emotions for all users$")
+    public void aMedicalProfessionalThatNeedsToKnowTheTrendsOfEmotionsForAllUsers() {
     }
 
     @And("^a mobile app that accesses the system's public API$")
     public void aMobileAppThatAccessesTheSystemSPublicAPI() {
     }
 
-    @When("^the system records a status \\(mood\\) change with the user$")
-    public void theSystemRecordsAStatusMoodChangeWithTheUser() {
+    @Then("^the medical professional should be able to obtain all emotions registered, without any user identification$")
+    public void theMedicalProfessionalShouldBeAbleToObtainAllEmotionsRegisteredWithoutAnyUserIdentification() {
     }
 
-    @Then("^the medical professional should be notified via the mobile app$")
-    public void theMedicalProfessionalShouldBeNotifiedViaTheMobileApp() {
+    @Given("^a <user> with a medical condition$")
+    public void aUserWithAMedicalCondition() {
     }
 
-    @When("^the medical professional wishes to check on their patient latest reports$")
-    public void theMedicalProfessionalWishesToCheckOnTheirPatientLatestReports() {
+    @And("^a medical professional that cares for said user$")
+    public void aMedicalProfessionalThatCaresForSaidUser() {
     }
 
-    @Then("^the medical professional should be able to access that information using the mobile app$")
-    public void theMedicalProfessionalShouldBeAbleToAccessThatInformationUsingTheMobileApp() {
+    @When("^the medical professional wishes to check on their <user> latest reports$")
+    public void theMedicalProfessionalWishesToCheckOnTheirUserLatestReports() {
+    }
+
+    @Then("^the medical professional should be able to access the latest reports of the <user> <emotions> using the mobile app$")
+    public void theMedicalProfessionalShouldBeAbleToAccessTheLatestReportsOfTheUserEmotionsUsingTheMobileApp() {
     }
 }

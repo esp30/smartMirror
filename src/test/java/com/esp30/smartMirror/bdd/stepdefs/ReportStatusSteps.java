@@ -14,15 +14,15 @@ public class ReportStatusSteps {
     @And("^says \"([^\"]*)\"$")
     public void says(String arg0) throws Throwable {
         // Write code here that turns the phrase above into concrete actions
-        // throw new cucumber.api.PendingException();
+        throw new cucumber.api.PendingException();
     }
 
-    @And("^the user is happy$")
-    public void theUserIsHappy() {
+    @And("^the user is <emotion>$")
+    public void theUserIsEmotion() {
     }
 
-    @Then("^the smart mirror should assess his status \\(mood\\) as happy$")
-    public void theSmartMirrorShouldAssessHisStatusMoodAsHappy() {
+    @Then("^the smart mirror should assess the user's mood as <emotionResult>$")
+    public void theSmartMirrorShouldAssessTheUserSMoodAsEmotionResult() {
     }
 
     @And("^said user just woke up$")
