@@ -4,7 +4,7 @@ pipeline{
     triggers { cron(cron_job) }
     parameters {
         choice(
-            name:'pipelineType',
+            name:'pipelinetype',
             choices: 'Test + Deploy\nDeploy\nTest',
             description: 'Run the entire pipeline or only some parts of it'
         )
@@ -12,10 +12,10 @@ pipeline{
     stages {
         stage('Test'){
             when {
-                expression { params.pipelineType == 'Test + Deploy' || params.pipelineType == 'Test'}
+                expression { params.pipelinetype == 'Test + Deploy' || params.pipelinetype == 'Test'}
             }
             steps{
-                echo "Pipeline type ${params.pipeline_type}"
+                echo "Pipeline type ${params.pipelinetype}"
                 sshagent(credentials: ['esp30-ssh-deploy']){
                     sh 'echo "testing ssh connection"'
                     sh "ssh -o 'StrictHostKeyChecking=no' -l esp30 192.168.160.103 uname -a"
@@ -24,7 +24,7 @@ pipeline{
         }
         stage('Deploy to Artifactory'){
             when {
-                expression { params.pipelineType == 'Test + Deploy' || params.pipelineType == 'Deploy'}
+                expression { params.pipelinetype == 'Test + Deploy' || params.pipelinetype == 'Deploy'}
             }
             steps{
                 sh 'mvn deploy -s settings.xml -DskipTests'
@@ -33,7 +33,7 @@ pipeline{
 
         stage('Deploy back-end'){
             when {
-                expression { params.pipelineType == 'Test + Deploy' || params.pipelineType == 'Deploy'}
+                expression { params.pipelinetype == 'Test + Deploy' || params.pipelinetype == 'Deploy'}
             }
             steps{
                 sh "docker build -t esp30-smartmirror-emotiondetection python_src/."
@@ -43,7 +43,7 @@ pipeline{
         }
         stage('Cucumber Tests') {
             when {
-                expression { params.pipelineType == 'Test + Deploy' || params.pipelineType == 'Test'}
+                expression { params.pipelinetype == 'Test + Deploy' || params.pipelinetype == 'Test'}
             }
             steps {
                 parallel(
@@ -61,7 +61,7 @@ pipeline{
                 
         stage('Deploy on runtime'){
             when {
-                expression { params.pipelineType == 'Test + Deploy' || params.pipelineType == 'Deploy'}
+                expression { params.pipelinetype == 'Test + Deploy' || params.pipelinetype == 'Deploy'}
             }
             steps{
                 sshagent(credentials: ['esp30-ssh-deploy']){
@@ -77,7 +77,7 @@ pipeline{
         }
         stage ('Prepare Reports') {
             when {
-                expression { params.pipelineType == 'Test + Deploy' || params.pipelineType == 'Test'}
+                expression { params.pipelinetype == 'Test + Deploy' || params.pipelinetype == 'Test'}
             }
             steps {
                 cucumber buildStatus: "SUCCESS",
