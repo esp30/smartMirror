@@ -48,7 +48,7 @@
         </div>
     </div>
     <form th:action="@{/mirror}" method="post" th:object="${photoTaken}">
-        <input type="text" id="image" th:field="${b64Encoded}"/>
+        <input type="text" id="image" th:field="*{b64Encoded}"/>
         <input type="submit"/>
     </form>
 </div>
