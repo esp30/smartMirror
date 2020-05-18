@@ -12,7 +12,7 @@ pipeline{
     stages {
         stage('Test'){
             when {
-                expression { params.pipelinetype == 'Test + Deploy' || params.pipelinetype == 'Test'}
+                expression { (params.pipelinetype == 'Test + Deploy') || (params.pipelinetype == 'Test')}
             }
             steps{
                 echo "Pipeline type ${params.pipelinetype}"
@@ -24,7 +24,7 @@ pipeline{
         }
         stage('Deploy to Artifactory'){
             when {
-                expression { params.pipelinetype == 'Test + Deploy' || params.pipelinetype == 'Deploy'}
+                expression { (params.pipelinetype == 'Test + Deploy') || (params.pipelinetype == 'Deploy')}
             }
             steps{
                 sh 'mvn deploy -s settings.xml -DskipTests'
@@ -33,7 +33,7 @@ pipeline{
 
         stage('Deploy back-end'){
             when {
-                expression { params.pipelinetype == 'Test + Deploy' || params.pipelinetype == 'Deploy'}
+                expression { (params.pipelinetype == 'Test + Deploy') || (params.pipelinetype == 'Deploy')}
             }
             steps{
                 sh "docker build -t esp30-smartmirror-emotiondetection python_src/."
@@ -43,7 +43,7 @@ pipeline{
         }
         stage('Cucumber Tests') {
             when {
-                expression { params.pipelinetype == 'Test + Deploy' || params.pipelinetype == 'Test'}
+                expression { (params.pipelinetype == 'Test + Deploy') || (params.pipelinetype == 'Test')}
             }
             steps {
                 parallel(
@@ -61,7 +61,7 @@ pipeline{
                 
         stage('Deploy on runtime'){
             when {
-                expression { params.pipelinetype == 'Test + Deploy' || params.pipelinetype == 'Deploy'}
+                expression { (params.pipelinetype == 'Test + Deploy') || (params.pipelinetype == 'Deploy')}
             }
             steps{
                 sshagent(credentials: ['esp30-ssh-deploy']){
@@ -77,7 +77,7 @@ pipeline{
         }
         stage ('Prepare Reports') {
             when {
-                expression { params.pipelinetype == 'Test + Deploy' || params.pipelinetype == 'Test'}
+                expression { (params.pipelinetype == 'Test + Deploy') || (params.pipelinetype == 'Test')}
             }
             steps {
                 cucumber buildStatus: "SUCCESS",
