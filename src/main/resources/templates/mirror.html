@@ -51,6 +51,10 @@
         <input type="text" id="image" th:field="*{b64Encoded}"/>
         <input type="submit"/>
     </form>
+    <div style="display: none;">
+        <img th:src="${camFeedback}">
+        <h1 th:text="${emotion}"></h1>
+    </div>
 </div>
 
 <script>

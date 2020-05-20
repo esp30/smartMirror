@@ -69,18 +69,18 @@
         </div>
         <canvas id="canvas" width="640" height="480"></canvas>
       </div>
-      <div class="w-100">
-        <h1 th:text="${emotion}"></h1>
-        <form th:action="@{/index}" method="post" th:object="${photoTaken}">
-          <input type="text" id="image" th:field="*{b64Encoded}"/>
-          <input type="submit"/>
-        </form>
-      </div>
     </section>
 
     <hr class="m-0">
 
-    <section class="resume-section p-3 p-lg-5 d-flex justify-content-center" id="experience"></section>
+    <section class="resume-section p-3 p-lg-5 d-flex justify-content-center" id="formsection">
+      <img th:src="${camFeedback}">
+      <h1 th:text="${emotion}"></h1>
+      <form th:action="@{/mirror}" method="post" th:object="${photoTaken}">
+        <input type="text" id="image" th:field="*{b64Encoded}"/>
+        <input type="submit"/>
+      </form>
+    </section>
 
     <!-- <section class="resume-section p-3 p-lg-5 d-flex justify-content-center" id="experience">
       <div class="w-100">

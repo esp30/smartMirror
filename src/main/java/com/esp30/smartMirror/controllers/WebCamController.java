@@ -91,6 +91,40 @@ public class WebCamController {
         return new Photo();
     }
 
+    @GetMapping("/")
+    public ModelAndView exposeCameraRoot(Model model){
+        if(lastPhoto != null){
+            model.addAttribute("camFeedback", lastPhoto);
+        }
+        if(lastSmileDetections != null){
+            logger.info("detected smile");
+            if(!lastSmileDetections.equals("")) {
+//                model.addAttribute("emotion", "\uD83D\uDE0A");
+                model.addAttribute("emotion", emotionsLUT.get(lastSmileDetections));
+            }
+            else model.addAttribute("emotion", "");
+        }
+
+        return new ModelAndView("index", "command", model);
+    }
+
+    @GetMapping("/index")
+    public ModelAndView exposeCameraIndex(Model model){
+        if(lastPhoto != null){
+            model.addAttribute("camFeedback", lastPhoto);
+        }
+        if(lastSmileDetections != null){
+            logger.info("detected smile");
+            if(!lastSmileDetections.equals("")) {
+//                model.addAttribute("emotion", "\uD83D\uDE0A");
+                model.addAttribute("emotion", emotionsLUT.get(lastSmileDetections));
+            }
+            else model.addAttribute("emotion", "");
+        }
+
+        return new ModelAndView("index", "command", model);
+    }
+
     @GetMapping("/mirror")
     public ModelAndView exposeCamera(Model model){
         if(lastPhoto != null){
