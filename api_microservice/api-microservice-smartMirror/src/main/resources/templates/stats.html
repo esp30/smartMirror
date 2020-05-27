@@ -24,7 +24,7 @@
     <h3 id="neutral" th:text="${neutral_count}" style="display:none"></h3>
     
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <a class="navbar-brand" href="#">SmartMirror Dashboard</a>
+  <a class="navbar-brand" href="/">SmartMirror Dashboard</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
@@ -32,7 +32,7 @@
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto">
       <li class="nav-item active">
-        <a class="nav-link" href="#">Statistics <span class="sr-only">(current)</span></a>
+        <a class="nav-link" href="" style="color:darkslategray">Statistics <span class="sr-only">(current)</span></a>
       </li>
  
     </ul>
@@ -103,7 +103,8 @@
             scales: {
                 yAxes: [{
                     ticks: {
-                        beginAtZero: true
+                        beginAtZero: true,
+                        stepSize: 1
                     }
                 }]
             }

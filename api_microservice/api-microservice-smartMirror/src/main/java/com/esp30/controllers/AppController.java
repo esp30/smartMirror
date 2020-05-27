@@ -35,6 +35,12 @@ public class AppController {
     
     static final String DEFAULT_ENDPOINT = "https://192.168.160.103:30043";
     
+    @GetMapping("/")
+    public ModelAndView showRoot(Model model){
+
+        return new ModelAndView("index", "command", model);
+    }
+    
     @GetMapping("/stats")
     public ModelAndView showStats(Model model) throws KeyStoreException, NoSuchAlgorithmException, KeyManagementException, JSONException{
         System.out.println("Fetching data frm emotions!");
