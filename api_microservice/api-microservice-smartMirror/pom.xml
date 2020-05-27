@@ -44,13 +44,13 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>esp-30</groupId>
-	<artifactId>api-microservice-smartMirror</artifactId>
+	<artifactId>esp30-api-microservice-smartMirror</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>api-microservice-smartMirror</name>
+	<name>esp30-api-microservice-smartMirror</name>
         <url>http://maven.apache.org</url>
 
 	<properties>
-		<java.version>11</java.version>
+		<java.version>1.8</java.version>
 	</properties>
 
 	<distributionManagement>
