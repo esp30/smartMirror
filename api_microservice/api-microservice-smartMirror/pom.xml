@@ -43,8 +43,8 @@
 		<version>2.2.4.RELEASE</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>esp-30</groupId>
-	<artifactId>esp30-api-microservice-smartMirror</artifactId>
+	<groupId>com.esp-30</groupId>
+	<artifactId>api-microservice-smartMirror</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>esp30-api-microservice-smartMirror</name>
         <url>http://maven.apache.org</url>

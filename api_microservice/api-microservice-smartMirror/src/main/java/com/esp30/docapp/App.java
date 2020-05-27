@@ -1,4 +1,4 @@
-package com.esp30;
+package main.java.com.esp30.docapp;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
