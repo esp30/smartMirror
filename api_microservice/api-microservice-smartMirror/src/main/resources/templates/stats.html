@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>SmartMirror</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script> 
+  
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/4.0.0/jquery.min.js"></script>
+   <!-- Latest compiled JavaScript -->
+   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+</head>
+
+<body id="page-top">
+
+        <h3 id="happy" th:text="${happy_count}" style="display:none"></h3>
+    <h3 id="neutral" th:text="${neutral_count}" style="display:none"></h3>
+    
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <a class="navbar-brand" href="#">SmartMirror Dashboard</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item active">
+        <a class="nav-link" href="#">Statistics <span class="sr-only">(current)</span></a>
+      </li>
+ 
+    </ul>
+    
+  </div>
+</nav>
+    
+    <div style="margin-top: 20px" class="container">
+        <div class="row">
+            <div class="col-md-4" style="height:200px; width:350px">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Today's emotion distribution</h5>
+                        <canvas id="myChart" width="150" height="150"></canvas>
+                    </div>  
+                </div>
+
+            </div>
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Current active users</h5>
+                        <ul class="list-group">
+                        <li class="list-group-item"  th:each="user: ${logged_users}"
+                            th:text="${user}"></li>
+                        </ul>      
+                    </div>  
+                </div>
+            </div>
+             <div class="col-md-4">
+
+                 <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Average user age</h5>
+                        <h2 th:text="${avg_age}"></h2>
+                    </div>  
+                </div>
+                          
+            </div>
+        </div>
+    </div>
+    
+    <script>
+    var ctx = document.getElementById('myChart').getContext('2d');
+    var happy = document.getElementById('happy').innerHTML;
+    var neutral = document.getElementById('neutral').innerHTML;
+    var myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['Neutral', 'Happy'],
+            datasets: [{
+                label: '# of people',
+                data: [neutral, happy],
+                backgroundColor: [
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 99, 132, 0.2)'
+
+                ],
+                borderColor: [
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 99, 132, 1)'
+
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            }
+        }
+    });
+    </script>
+
+</body>
+
+</html>
