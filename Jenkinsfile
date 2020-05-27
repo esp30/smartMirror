@@ -47,6 +47,7 @@ pipeline{
                 expression { (params.pipelinetype == 'Test + Deploy') || (params.pipelinetype == 'Deploy')}
             }
             steps{
+                sh 'cd api_microservice/api-microservice-smartMirror/ && mvn clean package -DskipTests && cd .. && cd ..'
                 sh "docker build -t esp30-smartmirror-docapp api_microservice/api-microservice-smartMirror/."
                 sh "docker tag esp30-smartmirror-docapp 192.168.160.99:5000/esp30-smartmirror-docapp"
                 sh "docker push 192.168.160.99:5000/esp30-smartmirror-docapp"
