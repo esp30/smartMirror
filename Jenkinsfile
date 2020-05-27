@@ -27,7 +27,16 @@ pipeline{
                 expression { (params.pipelinetype == 'Test + Deploy') || (params.pipelinetype == 'Deploy')}
             }
             steps{
-                sh 'mvn deploy -s settings.xml -DskipTests'
+                parallel(
+                    "Front End":
+                    {
+                        sh 'mvn deploy -s settings.xml -DskipTests'
+                    }
+                    "Doctor App":
+                     {
+                        sh 'cd  cd api_microservice/api-microservice-smartMirror/ && mvn deploy -s settings.xml -DskipTests && cd .. && cd ..'
+                     }
+                )
             }
         }
 
@@ -39,6 +48,16 @@ pipeline{
                 sh "docker build -t esp30-smartmirror-emotiondetection python_src/."
                 sh "docker tag esp30-smartmirror-emotiondetection 192.168.160.99:5000/esp30-smartmirror-emotiondetection"
                 sh "docker push 192.168.160.99:5000/esp30-smartmirror-emotiondetection"
+            }
+        }
+        stage('Deploy Doctor App'){
+            when {
+                expression { (params.pipelinetype == 'Test + Deploy') || (params.pipelinetype == 'Deploy')}
+            }
+            steps{
+                sh "docker build -t esp30-smartmirror-docapp api_microservice/api-microservice-smartMirror/."
+                sh "docker tag esp30-smartmirror-docapp 192.168.160.99:5000/esp30-smartmirror-docapp"
+                sh "docker push 192.168.160.99:5000/esp30-smartmirror-docapp"
             }
         }
         stage('Cucumber Tests') {
@@ -70,6 +89,8 @@ pipeline{
                     sh "ssh -o 'StrictHostKeyChecking=no' -l esp30 192.168.160.103 ./stopCurrentSmartMirror"
                     sh "ssh -o 'StrictHostKeyChecking=no' -l esp30 192.168.160.103 docker build --target front-end -t esp30-smartmirror ."
                     sh "ssh -o 'StrictHostKeyChecking=no' -l esp30 192.168.160.103 docker pull 192.168.160.99:5000/esp30-smartmirror-emotiondetection"
+                    sh "ssh -o 'StrictHostKeyChecking=no' -l esp30 192.168.160.103 docker pull 192.168.160.99:5000/esp30-smartmirror-docapp"
+                    sh "ssh -o 'StrictHostKeyChecking=no' -l esp30 192.168.160.103 docker run -d -p 30020:8080 --name esp30-smartmirror-docapp 192.168.160.99:5000/esp30-smartmirror-docapp"
                     sh "ssh -o 'StrictHostKeyChecking=no' -l esp30 192.168.160.103 docker run -d -p 30010:8080 -p 30043:8443 --name esp30-smartmirror esp30-smartmirror"
                     sh "ssh -o 'StrictHostKeyChecking=no' -l esp30 192.168.160.103 docker run -d --name esp30-smartmirror-emotiondetection 192.168.160.99:5000/esp30-smartmirror-emotiondetection"
                 }
