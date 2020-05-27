@@ -43,7 +43,7 @@
 		<version>2.2.4.RELEASE</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.esp-30</groupId>
+	<groupId>com.esp30</groupId>
 	<artifactId>api-microservice-smartMirror</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>esp30-api-microservice-smartMirror</name>
