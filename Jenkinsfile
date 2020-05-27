@@ -28,7 +28,7 @@ pipeline{
             }
             steps{
                 sh 'mvn deploy -s settings.xml -DskipTests'
-                sh 'cd api_microservice/api-microservice-smartMirror/ && mvn deploy -s settings.xml -DskipTests && cd .. && cd ..'
+                //sh 'cd api_microservice/api-microservice-smartMirror/ && mvn deploy -s settings.xml -DskipTests && cd .. && cd ..'
             }
         }
 
