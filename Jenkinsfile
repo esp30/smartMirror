@@ -27,16 +27,8 @@ pipeline{
                 expression { (params.pipelinetype == 'Test + Deploy') || (params.pipelinetype == 'Deploy')}
             }
             steps{
-                parallel(
-                    "Front End":
-                    {
-                        sh 'mvn deploy -s settings.xml -DskipTests'
-                    },
-                    "Doctor App":
-                     {
-                        sh 'cd api_microservice/api-microservice-smartMirror/ && mvn deploy -s settings.xml -DskipTests && cd .. && cd ..'
-                     }
-                )
+                sh 'mvn deploy -s settings.xml -DskipTests'
+                sh 'cd api_microservice/api-microservice-smartMirror/ && mvn deploy -s settings.xml -DskipTests && cd .. && cd ..'
             }
         }
 
