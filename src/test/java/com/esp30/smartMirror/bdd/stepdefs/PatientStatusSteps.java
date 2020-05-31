@@ -42,18 +42,17 @@ public class PatientStatusSteps {
     // Scenario 2 - Latest Reports
     @Given("a medical professional that takes care of {string}")
     public void aMedicalProfessionalThatCaresForSaidUser (String user) {
-        // Write code here that turns the phrase above into concrete actions
-        System.out.println("BYEEEEEEEEE1 " + user);
+        patientName = user;
     };
 
     @When("the medical professional wishes to check on their {string} latest reports")
-    public void theMedicalProfessionalWishesToCheckOnTheirUserLatestReports(String user) {
-        System.out.println("BYEEEEEEEEE2 " + user);
+    public void theMedicalProfessionalWishesToCheckOnTheirUserLatestReports() {
+        System.out.println("Doctor John wants to check on " + patientName);
+        // Impossible to test rn since the method userEmotions takes the patient ID as input parameter
+        // In this situation, it's impossible to know the patient id
     }
 
     @Then("the medical professional should be able to access the latest reports of the {string} {string} using the mobile app")
-    public void theMedicalProfessionalShouldBeAbleToAccessTheLatestReportsOfTheUserEmotionsUsingTheMobileApp(String user, String emotions) {
-        System.out.println("BYEEEEEEEEE3 " + user);
-        System.out.println(user + emotions);
+    public void theMedicalProfessionalShouldBeAbleToAccessTheLatestReportsOfTheUserEmotionsUsingTheMobileApp() {
     }
 }
