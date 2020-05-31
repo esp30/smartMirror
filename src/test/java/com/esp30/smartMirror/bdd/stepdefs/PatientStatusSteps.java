@@ -74,7 +74,7 @@ public class PatientStatusSteps {
     }
 
     // Scenario 2 - Latest Reports
-    @Given("a medical professional that takes care of {string} ({string})")
+    @Given("a medical professional that takes care of {string} {string}")
     public void aMedicalProfessionalThatCaresForSaidUser (String user, String id) {
         patientName = user;
         patientID = Integer.parseInt(id);

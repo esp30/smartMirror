@@ -10,7 +10,7 @@ Feature: F2 - Remotely Check Patient Status
 
   Scenario Outline: Latest Reports
   
-    Given a medical professional that takes care of <user> (<id>)
+    Given a medical professional that takes care of <user> <id>
     And a mobile app that accesses the system's public API
     When the medical professional wishes to check on their latest reports
     Then the medical professional should be able to access the latest reports of the patient using the mobile app
