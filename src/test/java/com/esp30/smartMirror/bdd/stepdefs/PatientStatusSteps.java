@@ -14,7 +14,6 @@ import org.springframework.core.env.Environment;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
 
 
 public class PatientStatusSteps {
@@ -31,7 +30,7 @@ public class PatientStatusSteps {
 
     // Scenario 1 - Emotion Trends
     @Given("a medical professional that needs to know the trends of emotions for all users")
-    public void aMedicalProfessionalThatNeedsToKnowTheTrendsOfEmotionsForAllUsers() throws Exception {
+    public void aMedicalProfessionalThatNeedsToKnowTheTrendsOfEmotionsForAllUsers() {
         System.out.println("Doctor John wants to check on his patients.");
     }
 
