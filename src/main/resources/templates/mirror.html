@@ -109,5 +109,43 @@
     })
 
 </script>
+<script>
+    var isChrome = !!window.chrome && (!!window.chrome.webstore || !!window.chrome.runtime);
+
+    if(isChrome){
+        var recognition = new webkitSpeechRecognition();
+        recognition.continuous = true;
+        recognition.interimResults = true;
+        recognition.lang = "en-US";
+        recognition.continuous = true;
+        recognition.start();
+
+        recognition.onresult = function(event) {
+            for (var i = event.resultIndex; i < event.results.length; ++i) {
+                if (event.results[i].isFinal) {
+                    if (event.results[i][0].transcript.trim() == "weather") {
+                        console.info('show weather');
+                    }
+                    if (event.results[i][0].transcript.trim() == "photo") {
+                        console.info('took a photo');
+                        eventFire(document.getElementById('video'), 'click');
+                    }
+                    console.info(`You said : ${event.results[i][0].transcript}`);
+                }
+            }
+        };
+    }
+
+    // taken from https://stackoverflow.com/questions/2705583/how-to-simulate-a-click-with-javascript
+    function eventFire(el, etype){
+        if (el.fireEvent) {
+            el.fireEvent('on' + etype);
+        } else {
+            var evObj = document.createEvent('Events');
+            evObj.initEvent(etype, true, false);
+            el.dispatchEvent(evObj);
+        }
+    }
+</script>
 </body>
 </html>
