@@ -20,7 +20,7 @@ public class PatientStatusSteps {
 //    @Autowired
 //    Environment environment;
 //    String port = environment.getProperty("local.server.port");
-    String port = "30043";
+    String port = "8443";
 
     CloseableHttpClient httpClient = HttpClients.createDefault();
 
@@ -80,7 +80,7 @@ public class PatientStatusSteps {
         patientID = Integer.parseInt(id);
     };
 
-    @When("the medical professional wishes to check on their {string} latest reports")
+    @When("the medical professional wishes to check on their latest reports")
     public void theMedicalProfessionalWishesToCheckOnTheirUserLatestReports() {
         System.out.println("Doctor John wants to check on " + patientName);
         try {
