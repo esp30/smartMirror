@@ -11,7 +11,9 @@ public class PatientStatusSteps {
     @Autowired ApiController controller;
 
     boolean valid = true;
-    String patientName;
+    String patientName = "";
+    int patientID = 0;
+    ArrayList<Emotion> emotions;
 
     // Scenario 1 - Emotion Trends
     @Given("a medical professional that needs to know the trends of emotions for all users")
@@ -22,7 +24,7 @@ public class PatientStatusSteps {
     @And("a mobile app that accesses the system's public API")
     public void aMobileAppThatAccessesTheSystemSPublicAPI() {
         try {
-            ArrayList<Emotion> emotions = controller.emotions();
+            emotions = controller.emotions();
             System.out.println("===== EMOTIONS =====");
             for (Emotion emo : emotions) {
                 System.out.println(emo.getUser() + ": " + emo.getValue());
@@ -41,18 +43,28 @@ public class PatientStatusSteps {
 
     // Scenario 2 - Latest Reports
     @Given("a medical professional that takes care of {string}")
-    public void aMedicalProfessionalThatCaresForSaidUser (String user) {
+    public void aMedicalProfessionalThatCaresForSaidUser (String user, int id) {
         patientName = user;
+        patientID = id;
     };
 
     @When("the medical professional wishes to check on their {string} latest reports")
     public void theMedicalProfessionalWishesToCheckOnTheirUserLatestReports() {
         System.out.println("Doctor John wants to check on " + patientName);
-        // Impossible to test rn since the method userEmotions takes the patient ID as input parameter
-        // In this situation, it's impossible to know the patient id
+        try {
+            emotions = controller.userEmotions(Integer.toString(patientID));
+        } catch (Exception e) {
+            valid = false;
+            System.err.println("Error accessing API - emotions retrieval failed.");
+        }
     }
 
     @Then("the medical professional should be able to access the latest reports of the {string} {string} using the mobile app")
     public void theMedicalProfessionalShouldBeAbleToAccessTheLatestReportsOfTheUserEmotionsUsingTheMobileApp() {
+        System.out.println("===== EMOTIONS =====");
+        for (Emotion emo : emotions) {
+            System.out.println(emo.getValue());
+        }
+        System.out.println("====================");
     }
 }
