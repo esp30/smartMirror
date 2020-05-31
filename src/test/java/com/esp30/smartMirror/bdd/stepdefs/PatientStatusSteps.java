@@ -10,7 +10,6 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
-
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -18,9 +17,10 @@ import java.net.URISyntaxException;
 
 public class PatientStatusSteps {
 
-    @Autowired
-    Environment environment;
-    String port = environment.getProperty("local.server.port");
+//    @Autowired
+//    Environment environment;
+//    String port = environment.getProperty("local.server.port");
+    String port = "30043";
 
     CloseableHttpClient httpClient = HttpClients.createDefault();
 
