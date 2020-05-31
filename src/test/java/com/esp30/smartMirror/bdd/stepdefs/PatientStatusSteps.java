@@ -74,10 +74,10 @@ public class PatientStatusSteps {
     }
 
     // Scenario 2 - Latest Reports
-    @Given("a medical professional that takes care of {string}")
-    public void aMedicalProfessionalThatCaresForSaidUser (String user, int id) {
+    @Given("a medical professional that takes care of {string} ({string})")
+    public void aMedicalProfessionalThatCaresForSaidUser (String user, String id) {
         patientName = user;
-        patientID = id;
+        patientID = Integer.parseInt(id);
     };
 
     @When("the medical professional wishes to check on their {string} latest reports")

@@ -16,7 +16,7 @@ Feature: F2 - Remotely Check Patient Status
     Then the medical professional should be able to access the latest reports of the patient using the mobile app
 
     Examples:
-    | user      | emotions  |
-    | "Mariana" |  "happy"  |
-    |   "Tiago" |   "sad"   |
-    |  "Raquel" |  "happy"  |
+    | user      | id   |
+    | "Mariana" |  "1" |
+    |   "Tiago" |  "2" |
+    |  "Raquel" |  "3" |
