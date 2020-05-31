@@ -1,19 +1,33 @@
 package com.esp30.smartMirror.bdd.stepdefs;
 import com.esp30.smartMirror.data.Emotion;
 import cucumber.api.java.en.*;
-import com.esp30.smartMirror.controllers.ApiController;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.utils.URIBuilder;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
+
 
 public class PatientStatusSteps {
 
-    @Autowired ApiController controller;
+    @Autowired
+    Environment environment;
+    String port = environment.getProperty("local.server.port");
 
-    boolean valid = true;
+    CloseableHttpClient httpClient = HttpClients.createDefault();
+
     String patientName = "";
     int patientID = 0;
-    ArrayList<Emotion> emotions;
+    String apiResponse;
 
     // Scenario 1 - Emotion Trends
     @Given("a medical professional that needs to know the trends of emotions for all users")
@@ -23,13 +37,32 @@ public class PatientStatusSteps {
 
     @And("a mobile app that accesses the system's public API")
     public void aMobileAppThatAccessesTheSystemSPublicAPI() {
-//        try {
-            emotions = controller.emotions();
-            System.out.println("===== EMOTIONS =====");
-            for (Emotion emo : emotions) {
-                System.out.println(emo.getUser() + ": " + emo.getValue());
+        try {
+            URI uri = new URIBuilder()
+                    .setScheme("http")
+                    .setHost("localhost")
+                    .setPort(Integer.parseInt(port))
+                    .setPath("/emotions")
+                    .build();
+            HttpGet request = new HttpGet(uri);
+//            HttpGet request = new HttpGet("http://localhost:"+port+"/emotions");
+            try {
+                HttpResponse response = httpClient.execute(request);
+                HttpEntity entity = response.getEntity();
+                apiResponse = EntityUtils.toString(entity, "UTF-8");
+            } catch (IOException e) {
+                System.err.println("Error accessing API - emotions retrieval failed.");
             }
-            System.out.println("====================");
+        } catch (URISyntaxException e) {
+            System.err.println("Error building URI.");
+        }
+//        try {
+//            emotions = controller.emotions();
+//            System.out.println("===== EMOTIONS =====");
+//            for (Emotion emo : emotions) {
+//                System.out.println(emo.getUser() + ": " + emo.getValue());
+//            }
+//            System.out.println("====================");
 //        } catch (Exception e) {
 //            valid = false;
 //            System.err.println("Error accessing API - emotions retrieval failed.");
@@ -38,7 +71,7 @@ public class PatientStatusSteps {
 
     @Then("the medical professional should be able to obtain all emotions registered without any user identification")
     public void theMedicalProfessionalShouldBeAbleToObtainAllEmotionsRegisteredWithoutAnyUserIdentification() {
-        assert(valid);
+        System.out.println("/emotions: "+apiResponse);
     }
 
     // Scenario 2 - Latest Reports
@@ -51,8 +84,28 @@ public class PatientStatusSteps {
     @When("the medical professional wishes to check on their {string} latest reports")
     public void theMedicalProfessionalWishesToCheckOnTheirUserLatestReports() {
         System.out.println("Doctor John wants to check on " + patientName);
+        try {
+            URI uri = new URIBuilder()
+                    .setScheme("http")
+                    .setHost("localhost")
+                    .setPort(Integer.parseInt(port))
+                    .setPath("/useremotions")
+                    .setParameter("id",Integer.toString(patientID))
+                    .build();
+            HttpGet request = new HttpGet(uri);
+//            HttpGet request = new HttpGet("http://localhost:"+port+"/useremotions");
+            try {
+                HttpResponse response = httpClient.execute(request);
+                HttpEntity entity = response.getEntity();
+                apiResponse = EntityUtils.toString(entity, "UTF-8");
+            } catch (IOException e) {
+                System.err.println("Error accessing API - emotions retrieval failed.");
+            }
+        } catch (URISyntaxException e) {
+            System.err.println("Error building URI.");
+        }
 //        try {
-            emotions = controller.userEmotions(Integer.toString(patientID));
+//            emotions = controller.userEmotions(Integer.toString(patientID));
 //        } catch (Exception e) {
 //            valid = false;
 //            System.err.println("Error accessing API - emotions retrieval failed.");
@@ -61,10 +114,6 @@ public class PatientStatusSteps {
 
     @Then("the medical professional should be able to access the latest reports of the {string} {string} using the mobile app")
     public void theMedicalProfessionalShouldBeAbleToAccessTheLatestReportsOfTheUserEmotionsUsingTheMobileApp() {
-        System.out.println("===== EMOTIONS =====");
-        for (Emotion emo : emotions) {
-            System.out.println(emo.getValue());
-        }
-        System.out.println("====================");
+        System.out.println("/useremotions{"+patientID+"}: "+apiResponse);
     }
 }
