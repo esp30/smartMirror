@@ -23,6 +23,16 @@
         video {
           object-fit: fill;
         }
+        #infoemo {
+            width: 10%;
+            height: 20%;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        #infoemo {
+            z-index: 10;
+        }
     </style>
 </head>
 <body>
@@ -51,8 +61,8 @@
         <input type="text" id="image" th:field="*{b64Encoded}"/>
         <input type="submit"/>
     </form>
-    <div style="display: none;">
-        <img th:src="${camFeedback}">
+    <div id="infoemo">
+        <img style = "display: none" th:src="${camFeedback}">
         <h1 th:text="${emotion}"></h1>
     </div>
 </div>
@@ -129,6 +139,14 @@
                     if (event.results[i][0].transcript.trim() == "photo") {
                         console.info('took a photo');
                         eventFire(document.getElementById('video'), 'click');
+                    }
+                    if (event.results[i][0].transcript.trim() == "yes") {
+                        console.info('accepted a photo');
+                        eventFire(document.getElementById('btn_send'), 'click');
+                    }
+                    if (event.results[i][0].transcript.trim() == "no") {
+                        console.info('rejected a photo');
+                        eventFire(document.getElementById('btn_discard'), 'click');
                     }
                     console.info(`You said : ${event.results[i][0].transcript}`);
                 }
