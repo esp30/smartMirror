@@ -5,15 +5,38 @@ import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.utils.URIBuilder;
+import org.apache.http.conn.ssl.NoopHostnameVerifier;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
+import org.apache.http.conn.ssl.TrustStrategy;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.junit.Before;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.core.env.Environment;
+import org.springframework.http.MediaType;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
+import org.springframework.test.web.client.MockRestServiceServer;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.web.client.RestTemplate;
+
+import javax.net.ssl.SSLContext;
+import javax.print.attribute.standard.Media;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.security.KeyManagementException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
 
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class PatientStatusSteps {
 
@@ -21,6 +44,7 @@ public class PatientStatusSteps {
 //    Environment environment;
 //    String port = environment.getProperty("local.server.port");
     String port = "8443";
+    static final String DEFAULT_ENDPOINT = "https://192.168.160.103:30043";
 
     CloseableHttpClient httpClient = HttpClients.createDefault();
 
@@ -37,35 +61,27 @@ public class PatientStatusSteps {
     @And("a mobile app that accesses the system's public API")
     public void aMobileAppThatAccessesTheSystemSPublicAPI() {
         try {
-            URI uri = new URIBuilder()
-                    .setScheme("http")
-                    .setHost("localhost")
-                    .setPort(Integer.parseInt(port))
-                    .setPath("/emotions")
+            TrustStrategy acceptingTrustStrategy = new TrustSelfSignedStrategy();
+
+            SSLContext sslContext = org.apache.http.ssl.SSLContexts.custom()
+                    .loadTrustMaterial(null, acceptingTrustStrategy)
                     .build();
-            HttpGet request = new HttpGet(uri);
-//            HttpGet request = new HttpGet("http://localhost:"+port+"/emotions");
-            try {
-                HttpResponse response = httpClient.execute(request);
-                HttpEntity entity = response.getEntity();
-                apiResponse = EntityUtils.toString(entity, "UTF-8");
-            } catch (IOException e) {
-                System.err.println("Error accessing API - emotions retrieval failed.");
-            }
-        } catch (URISyntaxException e) {
-            System.err.println("Error building URI.");
+
+            SSLConnectionSocketFactory csf = new SSLConnectionSocketFactory(sslContext, NoopHostnameVerifier.INSTANCE);
+
+            CloseableHttpClient httpClient = HttpClients.custom().setSSLSocketFactory(csf).build();
+            HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory();
+
+            requestFactory.setHttpClient(httpClient);
+
+            RestTemplate testRestTemplate = new RestTemplate(requestFactory);
+            String json = testRestTemplate.getForObject(DEFAULT_ENDPOINT + "/emotions", String.class);
+            JSONArray jsonArr = new JSONArray(json);
+
+            apiResponse = jsonArr.toString();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-//        try {
-//            emotions = controller.emotions();
-//            System.out.println("===== EMOTIONS =====");
-//            for (Emotion emo : emotions) {
-//                System.out.println(emo.getUser() + ": " + emo.getValue());
-//            }
-//            System.out.println("====================");
-//        } catch (Exception e) {
-//            valid = false;
-//            System.err.println("Error accessing API - emotions retrieval failed.");
-//        }
     }
 
     @Then("the medical professional should be able to obtain all emotions registered without any user identification")
@@ -84,31 +100,30 @@ public class PatientStatusSteps {
     public void theMedicalProfessionalWishesToCheckOnTheirUserLatestReports() {
         System.out.println("Doctor John wants to check on " + patientName);
         try {
-            URI uri = new URIBuilder()
-                    .setScheme("http")
-                    .setHost("localhost")
-                    .setPort(Integer.parseInt(port))
-                    .setPath("/useremotions")
-                    .setParameter("id",Integer.toString(patientID))
+            TrustStrategy acceptingTrustStrategy = new TrustSelfSignedStrategy();
+
+            SSLContext sslContext = org.apache.http.ssl.SSLContexts.custom()
+                    .loadTrustMaterial(null, acceptingTrustStrategy)
                     .build();
-            HttpGet request = new HttpGet(uri);
-//            HttpGet request = new HttpGet("http://localhost:"+port+"/useremotions");
-            try {
-                HttpResponse response = httpClient.execute(request);
-                HttpEntity entity = response.getEntity();
-                apiResponse = EntityUtils.toString(entity, "UTF-8");
-            } catch (IOException e) {
-                System.err.println("Error accessing API - emotions retrieval failed.");
-            }
-        } catch (URISyntaxException e) {
-            System.err.println("Error building URI.");
+
+            SSLConnectionSocketFactory csf = new SSLConnectionSocketFactory(sslContext, NoopHostnameVerifier.INSTANCE);
+
+            CloseableHttpClient httpClient = HttpClients.custom().setSSLSocketFactory(csf).build();
+            HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory();
+
+            requestFactory.setHttpClient(httpClient);
+
+            RestTemplate testRestTemplate = new RestTemplate(requestFactory);
+            String json = testRestTemplate.getForObject(DEFAULT_ENDPOINT + "/useremotions?id=" + patientName, String.class);
+            JSONArray jsonArr = new JSONArray(json);
+            JSONObject obj = jsonArr.getJSONObject(0);
+
+            assertThat(obj.get("user").toString() == patientName);
+            apiResponse = jsonArr.toString();
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-//        try {
-//            emotions = controller.userEmotions(Integer.toString(patientID));
-//        } catch (Exception e) {
-//            valid = false;
-//            System.err.println("Error accessing API - emotions retrieval failed.");
-//        }
     }
 
     @Then("the medical professional should be able to access the latest reports of the {string} {string} using the mobile app")
