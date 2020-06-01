@@ -1,7 +1,7 @@
 #FROM payara/server-full
 #COPY target/smartMirror-0.0.1.1.jar $DEPLOY_DIR
 
-FROM openjdk:8-jre-alpine AS front-end
+FROM openjdk:8-jre-slim-buster AS front-end
 WORKDIR /usr/local/runme
 ENV CN=esp30_smartMirrorFE
 COPY target/smartMirror-0.0.1.1.jar smartMirror.jar
