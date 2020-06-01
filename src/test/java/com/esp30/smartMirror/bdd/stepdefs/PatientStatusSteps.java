@@ -115,4 +115,8 @@ public class PatientStatusSteps {
     public void theMedicalProfessionalShouldBeAbleToAccessTheLatestReportsOfTheUserEmotionsUsingTheMobileApp() {
         System.out.println("/useremotions{"+patientID+"}: "+apiResponse);
     }
+
+    @Then("the medical professional should be able to access the latest reports of the patient using the mobile app")
+    public void theMedicalProfessionalShouldBeAbleToAccessTheLatestReportsOfThePatientUsingTheMobileApp() {
+    }
 }
