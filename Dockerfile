@@ -5,7 +5,7 @@ FROM openjdk:8-jre-slim-buster AS front-end
 WORKDIR /usr/local/runme
 ENV CN=esp30_smartMirrorFE
 COPY target/smartMirror-0.0.1.1.jar smartMirror.jar
-ENTRYPOINT ["java","-XX:+UseSerialGC", "-Xss512k", "-XX:MaxRAM=72m", "-jar", "smartMirror.jar"]
+ENTRYPOINT ["java","-XX:+UseSerialGC", "-Xss512k", "-XX:MaxRAM=150m", "-jar", "smartMirror.jar"]
 
 FROM python:3.6-slim-buster AS proc-unit
 COPY python_src/emoteDetection.py app/emoteDetection.py
