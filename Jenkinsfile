@@ -1,7 +1,7 @@
 String cron_job = BRANCH_NAME == "master" ? "@daily" : ""
 pipeline{
     agent any
-    triggers { cron(cron_job) }
+    //triggers { cron(cron_job) }
     parameters {
         choice(
             name:'pipelinetype',
