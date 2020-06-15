@@ -13,6 +13,7 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Before;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,6 +52,7 @@ public class PatientStatusSteps {
     String patientName = "";
     int patientID = 0;
     String apiResponse;
+    String json;
 
     // Scenario 1 - Emotion Trends
     @Given("a medical professional that needs to know the trends of emotions for all users")
@@ -75,10 +77,10 @@ public class PatientStatusSteps {
             requestFactory.setHttpClient(httpClient);
 
             RestTemplate testRestTemplate = new RestTemplate(requestFactory);
-            String json = testRestTemplate.getForObject(DEFAULT_ENDPOINT + "/emotions", String.class);
-            JSONArray jsonArr = new JSONArray(json);
-
-            apiResponse = jsonArr.toString();
+            json = testRestTemplate.getForObject(DEFAULT_ENDPOINT + "/emotions", String.class);
+//            JSONArray jsonArr = new JSONArray(json);
+//
+//            apiResponse = jsonArr.toString();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -86,7 +88,7 @@ public class PatientStatusSteps {
 
     @Then("the medical professional should be able to obtain all emotions registered without any user identification")
     public void theMedicalProfessionalShouldBeAbleToObtainAllEmotionsRegisteredWithoutAnyUserIdentification() {
-        System.out.println("/emotions: "+apiResponse);
+        assert(validParseJsonData(json,"/emotions"));
     }
 
     // Scenario 2 - Latest Reports
@@ -114,7 +116,7 @@ public class PatientStatusSteps {
             requestFactory.setHttpClient(httpClient);
 
             RestTemplate testRestTemplate = new RestTemplate(requestFactory);
-            String json = testRestTemplate.getForObject(DEFAULT_ENDPOINT + "/useremotions?id=" + patientName, String.class);
+            json = testRestTemplate.getForObject(DEFAULT_ENDPOINT + "/useremotions?id=" + patientName, String.class);
             JSONArray jsonArr = new JSONArray(json);
             JSONObject obj = jsonArr.getJSONObject(0);
 
@@ -128,10 +130,47 @@ public class PatientStatusSteps {
 
     @Then("the medical professional should be able to access the latest reports of the {string} {string} using the mobile app")
     public void theMedicalProfessionalShouldBeAbleToAccessTheLatestReportsOfTheUserEmotionsUsingTheMobileApp() {
-        System.out.println("/useremotions{"+patientID+"}: "+apiResponse);
+        assert(validParseJsonData(json,"/useremotions"));
     }
 
     @Then("the medical professional should be able to access the latest reports of the patient using the mobile app")
     public void theMedicalProfessionalShouldBeAbleToAccessTheLatestReportsOfThePatientUsingTheMobileApp() {
+        assert(validParseJsonData(json,"/useremotions"));
+    }
+
+    private boolean validParseJsonData(String jsonResponse, String method){
+        if(method.equals("/emotions")) {
+            try {
+                JSONArray jsonArray = new JSONArray(jsonResponse);
+
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    JSONObject jsonObject1 = jsonArray.getJSONObject(i);
+                    String value1 = jsonObject1.optString("id");
+                    String value2 = jsonObject1.optString("timestamp");
+                    String value3 = jsonObject1.optString("value");
+                    String value4 = jsonObject1.optString("user");
+                    return true;
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        else if(method.equals("/useremotions")) {
+            try {
+                JSONArray jsonArray = new JSONArray(jsonResponse);
+
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    JSONObject jsonObject1 = jsonArray.getJSONObject(i);
+                    String value1 = jsonObject1.optString("id");
+                    String value2 = jsonObject1.optString("timestamp");
+                    String value3 = jsonObject1.optString("value");
+                    String value4 = jsonObject1.optString("user");
+                    return true;
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return false;
     }
 }
