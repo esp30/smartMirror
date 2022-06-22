@@ -2,7 +2,7 @@ asgiref==3.2.7
 confluent-kafka==1.4.1
 Django==3.0.6
 image==1.5.31
-numpy==1.18.4
+numpy==1.22.0
 opencv-python==4.2.0.34
 Pillow==7.1.2
 pytz==2020.1
